@@ -6,7 +6,7 @@ pom.xml.next
 release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
-javajunior.iml
+
 .idea
 
 # Mobile Tools for Java (J2ME)
@@ -15,6 +15,7 @@ javajunior.iml
 # Package Files #
 *.war
 *.ear
+*.iml
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
