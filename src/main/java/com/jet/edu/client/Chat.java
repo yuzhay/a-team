@@ -5,16 +5,17 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Scanner;
 
 /**
  * Created by Yuriy on 12.11.2015.
  */
 public class Chat implements State {
-    private State state = null;
     private Connector connector;
     public static final String CHID = "/chid";
     public static final String HIST = "/hist";
     public static final String SND = "/snd";
+    Scanner scanner = new Scanner(System.in);
 
     public Chat(String host, int port) throws ChatException {
         connector = new Connector(host, port);
@@ -22,9 +23,8 @@ public class Chat implements State {
 
     public void readConsole() throws ChatException, IOException {
         String message;
-        BufferedReader readConsole = new BufferedReader(new InputStreamReader(System.in));
         while (true) {
-            message = readConsole.readLine();
+            message = scanner.nextLine();
             managerState(message);
         }
     }
@@ -39,6 +39,7 @@ public class Chat implements State {
 
     private void managerState(String messageWithCommand) throws ChatException, IOException {
         JSONObject jsonObject = new JSONObject();
+<<<<<<< HEAD
         String message = messageWithCommand.substring(messageWithCommand.indexOf(" ")+1);
         if (messageWithCommand.startsWith(CHID)){
             if (checkName(message)){
@@ -53,6 +54,36 @@ public class Chat implements State {
             jsonObject.put("cmd",HIST);
             jsonObject.put("msg",message);
             new HistoryState(jsonObject,connector).writeToConnector();
+=======
+        String[] mes = message.split(" ");
+        message = message.substring(message.indexOf(" ") + 1, message.length());
+        switch (mes[0]) {
+            case CHID:
+                if (checkName(message)) {
+                    jsonObject.put("cmd", CHID);
+                    jsonObject.put("msg", message);
+                    new RegisterState(jsonObject, connector).writerToConector();
+
+                }else{
+                    System.out.println("Некорректное имя!");
+                }
+                break;
+            case HIST:
+                jsonObject.put("cmd", HIST);
+                jsonObject.put("msg", message);
+                //new HistoryState(jsonObject);
+                break;
+            case SND:
+                if (checkSizeMessage(message)) {
+                    jsonObject.put("cmd", SND);
+                    jsonObject.put("msg", message);
+                  //  new SendState(jsonObject, connector).writerToConector();
+                }
+                break;
+            default:
+                System.out.println("Некорректный ввод команды!");
+                break;
+>>>>>>> bca1e601303a99f490cb5a70cfd9a90e8c5fd1fa
         }
 //        String[] mes = messageWithCommand.split(" ");
 //        messageWithCommand = messageWithCommand.substring(messageWithCommand.indexOf(" ") + 1, messageWithCommand.length());
