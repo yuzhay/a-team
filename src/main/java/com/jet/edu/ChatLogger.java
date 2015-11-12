@@ -17,11 +17,16 @@ public class ChatLogger {
      * @param filepath - path to file
      * @throws IOException - exception if something wrong whith file
      */
-    public ChatLogger(String filepath) throws IOException {
-        this.filepath = filepath;
-        FileHandler fileHandler = new FileHandler();
-        logger.setUseParentHandlers(false);
-        logger.addHandler(fileHandler);
+    public ChatLogger(String filepath){
+        try{
+            this.filepath = filepath;
+            FileHandler fileHandler = new FileHandler();
+            logger.setUseParentHandlers(false);
+            logger.addHandler(fileHandler);
+        } catch (IOException e){
+            this.filepath = null;
+            this.logger.log(Level.WARNING,"ERROR WITH FILE! LOGS WILL BE WRITE INTO CONSOLE");
+        }
     }
 
     /**
