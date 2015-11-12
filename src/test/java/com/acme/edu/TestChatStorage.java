@@ -31,6 +31,7 @@ public class TestChatStorage {
 
     @Test
     public void shouldDisconnectFromDB() throws Exception{
+        chatStorage.connect();
         chatStorage.disconnect();
     }
 
