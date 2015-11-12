@@ -14,11 +14,12 @@ public class RegisterState implements State {
         this.connector = connector;
     }
 
-    public void writerToConector() throws ChatException {
+    public void writeToConnector() throws ChatException {
         System.out.println(connector.sendMessage(jsonObject));
     }
 
     public void ReadConnector() {
+        //System.out.println(connector);
     }
 }
 

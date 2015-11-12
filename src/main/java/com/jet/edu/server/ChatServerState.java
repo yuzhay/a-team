@@ -41,6 +41,7 @@ public class ChatServerState implements ServerState {
                     return response.toString();
                 case COMMAND_HIST:
                     response.put("op", "SEND_TO_ME");
+                    response.put("history", storage.getHistory());
                     return response.toString();
             }
         }

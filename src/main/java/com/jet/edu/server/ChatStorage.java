@@ -1,5 +1,6 @@
 package com.jet.edu.server;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.sql.*;
@@ -33,9 +34,10 @@ public class ChatStorage implements Storage {
         }
     }
 
-    public List<JSONObject> getHistory() {
+    public JSONArray getHistory() {
         String query = "SELECT USERS.NAME, MESSAGE, TIME FROM APP.MESSAGES INNER JOIN APP.USERS ON USER_ID = USERS.ID";
-        List<JSONObject> list = new ArrayList<>();
+//        List<JSONObject> list = new ArrayList<>();
+        JSONArray jsonArray = new JSONArray();
         try (PreparedStatement iq = conn.prepareStatement(query)){
             ResultSet result = iq.executeQuery();
             while (result.next()){
@@ -43,12 +45,13 @@ public class ChatStorage implements Storage {
                 jsonObject.put("MESSAGE",result.getString("MESSAGE"));
                 jsonObject.put("TIME",result.getTimestamp("TIME").toString());
                 jsonObject.put("NICKNAME",result.getString("NAME"));
-                list.add(jsonObject);
+                jsonArray.put(jsonObject);
             }
         } catch (SQLException e){
             e.printStackTrace();
         }
-        return list;
+//        return list;
+        return jsonArray;
     }
 
     public boolean isUserOnline(String userName) {
