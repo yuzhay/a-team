@@ -24,6 +24,7 @@ public class ChatServer implements Server {
     private ServerSocket socket;
     private Thread serverThread;
     private Accepter accepter = new Accepter();
+    private List<Socket> clientsList = new ArrayList<>();
     //endregion
 
     //region Accepter
@@ -39,6 +40,7 @@ public class ChatServer implements Server {
             while (!Thread.interrupted()) {
                 try {
                     Socket client = socket.accept();
+                    clientsList.add(client);
                     pool.execute(new Worker(client));
                 } catch (SocketTimeoutException ste) {
                     /*Do nothing. Time is out. Wait for next client*/
@@ -60,17 +62,32 @@ public class ChatServer implements Server {
             public void run() {
                 try (
                         BufferedReader br = new BufferedReader(
-                                new InputStreamReader(client.getInputStream(), charset));
-                        OutputStreamWriter osw = new OutputStreamWriter(client.getOutputStream(), charset)
+                                new InputStreamReader(client.getInputStream(), charset))
                 ) {
-                    String line =  br.readLine();
+                    String line = br.readLine();
 
                     ChatServerState state = new ChatServerState();
-                    osw.write(state.switchState(line));
-                    osw.flush();
+                    String ret = state.switchState(line);
+                    sendToClients(client, ret);
+
+
                 } catch (IOException e) {
                     exceptionsList.add(e);
                     e.printStackTrace();
+                }
+            }
+        }
+
+        private void sendToClients(Socket client, String message) {
+            for (Socket c : clientsList) {
+                if (c == client) {
+                    continue;
+                }
+                try (OutputStreamWriter osw = new OutputStreamWriter(client.getOutputStream(), charset)) {
+                    osw.write(message);
+                    osw.flush();
+                } catch (IOException e) {
+
                 }
             }
         }
