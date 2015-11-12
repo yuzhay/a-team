@@ -1,7 +1,7 @@
 package com.jet.edu;
 
 /**
- * A-Team project
+ * Project04
  */
 public class ClientApp {
     public static void main(String[] args) {
