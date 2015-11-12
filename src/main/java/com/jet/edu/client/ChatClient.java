@@ -1,5 +1,7 @@
 package com.jet.edu.client;
 
+import com.jet.edu.ChatLogger;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -9,6 +11,7 @@ import java.io.InputStreamReader;
  */
 public class ChatClient implements Client {
     private final ChatClientState state;
+    private ChatLogger logger = new ChatLogger(System.getProperties().getProperty("user.home")+"/chatLog.txt");
 
     public ChatClient() throws ChatException {
         state = new ChatClientState();
