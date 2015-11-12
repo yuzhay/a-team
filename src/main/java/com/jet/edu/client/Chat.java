@@ -17,8 +17,8 @@ public class Chat implements State {
     public static final String HIST = "/hist";
     public static final String SND = "/snd";
 
-    public Chat() throws ChatException {
-        //    connector = new Connector("127.0.0.1", 6666);
+    public Chat(String host, int port) throws ChatException {
+        connector = new Connector(host, port);
     }
 
     public void readConsole() throws ChatException {
