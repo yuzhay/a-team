@@ -63,14 +63,10 @@ public class ChatServer implements Server {
                                 new InputStreamReader(client.getInputStream(), charset));
                         OutputStreamWriter osw = new OutputStreamWriter(client.getOutputStream(), charset)
                 ) {
-                    String line;
-                    StringBuilder buffer = new StringBuilder();
-                    while ((line = br.readLine()) != null) {
-                        buffer.append(line);
-                    }
+                    String line =  br.readLine();
 
                     ChatServerState state = new ChatServerState();
-                    osw.write(state.switchState(buffer.toString()));
+                    osw.write(state.switchState(line));
                     osw.flush();
                 } catch (IOException e) {
                     exceptionsList.add(e);
