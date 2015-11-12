@@ -3,8 +3,8 @@ package com.jet.edu;
 /**
  * A-Team project
  */
-public class App {
+public class ClientApp {
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        System.out.println("Client started!");
     }
 }
