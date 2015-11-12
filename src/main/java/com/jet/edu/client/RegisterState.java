@@ -15,10 +15,14 @@ public class RegisterState implements State {
     }
 
     public void writerToConector() throws ChatException {
-        System.out.println(connector.sendMessage(jsonObject));
-    }
-
-    public void ReadConnector() {
+        String fromConnector = connector.sendMessage(jsonObject);
+        if (fromConnector != null) {
+            JSONObject messageFromServer = new JSONObject(fromConnector);
+            String message = messageFromServer.get("msg").toString();
+            System.out.println(message);
+        } else{
+            System.out.println("Нет соединения");
+        }
     }
 }
 

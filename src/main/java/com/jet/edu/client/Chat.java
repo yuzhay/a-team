@@ -2,19 +2,20 @@ package com.jet.edu.client;
 
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.util.Scanner;
 
 /**
  * Created by Yuriy on 12.11.2015.
  */
-public class Chat implements State {
-    private State state = null;
+public class Chat{
     private Connector connector;
+    public static final String CHROOM = "/chroom";
     public static final String CHID = "/chid";
     public static final String HIST = "/hist";
     public static final String SND = "/snd";
+    Scanner scanner = new Scanner(System.in);
+
 
     public Chat(String host, int port) throws ChatException {
         connector = new Connector(host, port);
@@ -22,10 +23,9 @@ public class Chat implements State {
 
     public void readConsole() throws ChatException, IOException {
         String message;
-        BufferedReader readConsole = new BufferedReader(new InputStreamReader(System.in));
         while (true) {
-            message = readConsole.readLine();
-            managerComand(message);
+            message = scanner.nextLine();
+            managerState(message);
         }
     }
 
@@ -37,20 +37,19 @@ public class Chat implements State {
         return (name.length() < 50 && !name.contains(" "));
     }
 
-    private void managerComand(String message) throws ChatException, IOException {
+    private void managerState(String message) throws ChatException, IOException {
         JSONObject jsonObject = new JSONObject();
         String[] mes = message.split(" ");
         message = message.substring(message.indexOf(" ") + 1, message.length());
+
         switch (mes[0]) {
             case CHID:
                 if (checkName(message) && checkSizeMessage(message)) {
                     jsonObject.put("cmd", CHID);
                     jsonObject.put("msg", message);
                     new RegisterState(jsonObject, connector).writerToConector();
-
                 }else{
-                    System.out.println("некорректное имя!");
-                    System.in.read();
+                    System.out.println("Некорректное имя!");
                 }
                 break;
             case HIST:
@@ -58,12 +57,20 @@ public class Chat implements State {
                 jsonObject.put("msg", message);
                 //new HistoryState(jsonObject);
                 break;
+
             case SND:
-                jsonObject.put("cmd", SND);
+                if (checkSizeMessage(message)) {
+                    jsonObject.put("cmd", SND);
+                    jsonObject.put("msg", message);
+                  //  new SendState(jsonObject, connector).writerToConector();
+                }
+                break;
+            case CHROOM:
+                jsonObject.put("cmd", CHROOM);
                 jsonObject.put("msg", message);
-                //new SendState(jsonObject);
                 break;
             default:
+                System.out.println("Некорректный ввод команды!");
         }
     }
 }

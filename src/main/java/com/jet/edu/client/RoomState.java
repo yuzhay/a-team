@@ -1,9 +1,10 @@
 package com.jet.edu.client;
 
 /**
- * Created by Павел on 12.11.2015.
+ * Created by Павел on 13.11.2015.
  */
-public class HistoryState implements State {
+public class RoomState implements State {
+
     @Override
     public void writerToConector() throws ChatException {
 

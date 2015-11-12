@@ -2,6 +2,8 @@ package com.jet.edu.server;
 
 import org.json.JSONObject;
 
+import java.sql.SQLException;
+
 /**
  * Created by Yuriy on 12.11.2015.
  */
@@ -20,6 +22,11 @@ public class ChatServerState implements ServerState {
         if (json.has("cmd")) {
             String cmd = json.getString("cmd");
             String msg = json.getString("msg");
+            try {
+                storage.connect();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
             switch (cmd) {
                 case COMMAND_SND:
                     String name = json.getString("name");
