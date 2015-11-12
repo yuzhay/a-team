@@ -30,7 +30,7 @@ public class ChatServer implements Server {
     private class Accepter implements Runnable {
         //region private fields
         private List<IOException> exceptionsList = new ArrayList<>();
-        private ExecutorService pool = Executors.newFixedThreadPool(10);
+        private ExecutorService pool = Executors.newFixedThreadPool(1000);
         //endregion
 
         //region public methods
