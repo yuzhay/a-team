@@ -62,15 +62,20 @@ public class ChatServer implements Server {
             public void run() {
                 try (
                         BufferedReader br = new BufferedReader(
-                                new InputStreamReader(client.getInputStream(), charset))
+                                new InputStreamReader(client.getInputStream(), charset));
+                        OutputStreamWriter osw = new OutputStreamWriter(client.getOutputStream(), charset)
                 ) {
                     String line = br.readLine();
-
                     ChatServerState state = new ChatServerState();
-                    String ret = state.switchState(line);
-                    sendToClients(client, ret);
 
+                    JSONObject json = new JSONObject(state.switchState(line));
 
+                    if (json.getString("op").equals("SEND_TO_OTHERS")) {
+                        sendToClients(client, json.toString());
+                    } else {
+                        osw.write(json.toString());
+                        osw.flush();
+                    }
                 } catch (IOException e) {
                     exceptionsList.add(e);
                     e.printStackTrace();
