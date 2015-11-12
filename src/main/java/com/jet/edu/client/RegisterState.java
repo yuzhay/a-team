@@ -16,10 +16,11 @@ public class RegisterState implements State {
         this.connector = connector;
     }
 
-<<<<<<< HEAD
+
     public void writeToConnector() throws ChatException {
         System.out.println(connector.sendMessage(jsonObject));
-=======
+    }
+
     public void writerToConector() throws ChatException {
         String fromConnector = connector.sendMessage(jsonObject);
         if (fromConnector != null) {
@@ -29,7 +30,6 @@ public class RegisterState implements State {
         } else{
             System.out.println("Нет соединения");
         }
->>>>>>> bca1e601303a99f490cb5a70cfd9a90e8c5fd1fa
     }
 
     public void ReadConnector() {
