@@ -25,6 +25,7 @@ public class ChatClientState implements ClientState {
                 jsonObject.put("cmd", CHID);
                 jsonObject.put("msg",message);
                 client.sendMessage(jsonObject);
+
                 break;
             case HIST:
                 jsonObject.put("cmd",HIST);
