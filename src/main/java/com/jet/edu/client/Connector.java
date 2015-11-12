@@ -21,11 +21,13 @@ public class Connector {
     }
 
     public String sendMessage(JSONObject jsonMessage) throws ChatException {
-        try (BufferedWriter bw = new BufferedWriter(
-                new OutputStreamWriter(socket.getOutputStream(), charset));
-             BufferedReader br = new BufferedReader(
-                     new InputStreamReader(socket.getInputStream(), charset))) {
-            bw.write(jsonMessage.toString());
+        try {
+            BufferedWriter bw = new BufferedWriter(
+                    new OutputStreamWriter(socket.getOutputStream(), charset));
+            BufferedReader br = new BufferedReader(
+                    new InputStreamReader(socket.getInputStream(), charset));
+            bw.write(jsonMessage.toString() + System.lineSeparator());
+            bw.flush();
             return br.readLine();
         } catch (IOException e) {
             throw new ChatException("", e);

@@ -20,9 +20,9 @@ public class ChatServerState implements ServerState {
         if (json.has("cmd")) {
             String cmd = json.getString("cmd");
             String msg = json.getString("msg");
-            String name = json.getString("name");
             switch (cmd) {
                 case COMMAND_SND:
+                    String name = json.getString("name");
                     storage.addMessage(name, msg);
                     response.put("msg", msg);
                     response.put("op", "SEND_TO_OTHERS");
