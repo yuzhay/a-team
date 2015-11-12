@@ -27,5 +27,4 @@ public class Connector {
             throw new ChatException("",e);
         }
     }
-
 }

@@ -10,7 +10,6 @@ import java.io.InputStreamReader;
  * Created by Yuriy on 12.11.2015.
  */
 public class Chat implements State {
-    //private final ChatClientState state;
     private State state = null;
     private Connector connector;
     public static final String CHID = "/chid";
@@ -18,12 +17,11 @@ public class Chat implements State {
     public static final String SND = "/snd";
 
     public Chat() throws ChatException {
-        //    connector = new Connector("127.0.0.1", 6666);
+        connector = new Connector("127.0.0.1", 6666);
     }
 
     public void readConsole() throws ChatException {
         while (true) {
-
             String message;
             BufferedReader readConsole = new BufferedReader(new InputStreamReader(System.in));
             try {
