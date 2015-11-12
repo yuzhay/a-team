@@ -1,6 +1,10 @@
 package com.jet.edu.server;
 
+import org.json.JSONObject;
+
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Yuriy on 12.11.2015.
@@ -29,9 +33,22 @@ public class ChatStorage implements Storage {
         }
     }
 
-    public String[] getHistory() {
-        //String query = "SELECT (ID)";
-        return new String[0];
+    public List<JSONObject> getHistory() {
+        String query = "SELECT USERS.NAME, MESSAGE, TIME FROM APP.MESSAGES INNER JOIN APP.USERS ON USER_ID = USERS.ID";
+        List<JSONObject> list = new ArrayList<>();
+        try (PreparedStatement iq = conn.prepareStatement(query)){
+            ResultSet result = iq.executeQuery();
+            while (result.next()){
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("MESSAGE",result.getString("MESSAGE"));
+                jsonObject.put("TIME",result.getTimestamp("TIME").toString());
+                jsonObject.put("NICKNAME",result.getString("NAME"));
+                list.add(jsonObject);
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return list;
     }
 
     public boolean isUserOnline(String userName) {

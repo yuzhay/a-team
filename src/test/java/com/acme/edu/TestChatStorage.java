@@ -2,10 +2,11 @@ package com.acme.edu;
 
 
 import com.jet.edu.server.ChatStorage;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.json.JSONObject;
+import org.junit.*;
+
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by user on 12.11.2015.
@@ -61,5 +62,17 @@ public class TestChatStorage {
         chatStorage.addMessage("Yura","Hello!");
     }
 
+    @Test @Ignore
+    public void shouldCorrectlyGetHistory() throws Exception{
+        chatStorage.connect();
 
+        Iterator<JSONObject> it = chatStorage.getHistory().iterator();
+        while (it.hasNext()){
+            System.out.println(it.next().toString());
+        }
+
+        List<JSONObject> list = chatStorage.getHistory();
+        Assert.assertEquals(list.get(0).getString("MESSAGE"),"MESSAGE");
+        Assert.assertEquals(list.get(0).getString("NICKNAME"),"Yura");
+    }
 }
