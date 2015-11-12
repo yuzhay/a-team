@@ -5,5 +5,6 @@ package com.jet.edu;
  */
 public class ClientApp {
     public static void main(String[] args) {
+
     }
 }

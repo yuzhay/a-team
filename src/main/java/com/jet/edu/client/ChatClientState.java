@@ -16,6 +16,7 @@ public class ChatClientState implements ClientState {
         client = new Connector("127.0.0.1", 666);
     }
 
+
     public void stateCmd(String message) throws ChatException {
         JSONObject jsonObject =  new JSONObject();
         String[] mes = message.split(" ");
