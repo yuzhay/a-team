@@ -22,6 +22,7 @@ public class ChatServer implements Server {
     private ServerSocket socket;
     private Thread serverThread;
     private Accepter accepter = new Accepter();
+    private List<Socket> clientsList = new ArrayList<>();
     //endregion
 
     //region Accepter
@@ -37,6 +38,7 @@ public class ChatServer implements Server {
             while (!Thread.interrupted()) {
                 try {
                     Socket client = socket.accept();
+                    clientsList.add(client);
                     pool.execute(new Worker(client));
                 } catch (SocketTimeoutException ste) {
                     /*Do nothing. Time is out. Wait for next client*/
@@ -61,14 +63,35 @@ public class ChatServer implements Server {
                                 new InputStreamReader(client.getInputStream(), charset));
                         OutputStreamWriter osw = new OutputStreamWriter(client.getOutputStream(), charset)
                 ) {
-                    String line =  br.readLine();
-
                     ChatServerState state = new ChatServerState();
-                    osw.write(state.switchState(line));
-                    osw.flush();
+                    String line;
+                    while ((line = br.readLine()) != null) {
+                        JSONObject json = new JSONObject(state.switchState(line));
+
+                        if (json.getString("op").equals("SEND_TO_OTHERS")) {
+                            sendToClients(client, json.toString());
+                        } else {
+                            osw.write(json.toString());
+                            osw.flush();
+                        }
+                    }
                 } catch (IOException e) {
                     exceptionsList.add(e);
                     e.printStackTrace();
+                }
+            }
+        }
+
+        private void sendToClients(Socket client, String message) {
+            for (Socket c : clientsList) {
+                if (c == client) {
+                    continue;
+                }
+                try (OutputStreamWriter osw = new OutputStreamWriter(client.getOutputStream(), charset)) {
+                    osw.write(message);
+                    osw.flush();
+                } catch (IOException e) {
+
                 }
             }
         }

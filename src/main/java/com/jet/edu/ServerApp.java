@@ -10,5 +10,6 @@ public class ServerApp {
         System.out.println("Server started!");
         ChatServer server = new ChatServer(12345);
         server.start();
+
     }
 }
