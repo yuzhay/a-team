@@ -18,7 +18,7 @@ public class ChatStorage implements Storage {
     }
 
     public void addMessage(String name, String msg) {
-        String query = "INSERT INTO messages(USER_ID,MESSAGE) VALUES((SELECT id FROM USERS WHERE name=?), ?)";
+        String query = "INSERT INTO APP.MESSAGES (USER_ID,MESSAGE) VALUES((SELECT id FROM USERS WHERE name=?), ?)";
         try (
                 PreparedStatement iq = conn.prepareStatement(query)) {
             iq.setString(1, name);
@@ -34,7 +34,7 @@ public class ChatStorage implements Storage {
     }
 
     public boolean isUserOnline(String userName) {
-        String query = "SELECT ONLINE FROM users WHERE name=?)";
+        String query = "SELECT ONLINE FROM APP.USERS WHERE name=?)";
         try (PreparedStatement iq = conn.prepareStatement(query)) {
             iq.setString(1, userName);
             ResultSet result = iq.executeQuery();
@@ -48,7 +48,7 @@ public class ChatStorage implements Storage {
     }
 
     public void setUserOffline(String userName) {
-        String query = "UPDATE TABLE users set ONLINE = 0)";
+        String query = "UPDATE TABLE APP.USERS set ONLINE = 0)";
         try (
                 PreparedStatement iq = conn.prepareStatement(query)) {
             iq.executeUpdate();
@@ -58,7 +58,7 @@ public class ChatStorage implements Storage {
     }
 
     public void addUser(String userName) {
-        String query = "INSERT INTO users(NAME, ONLINE) VALUES(?, 1)";
+        String query = "INSERT INTO APP.USERS (NAME, ONLINE) VALUES(?, 1)";
         try (
                 PreparedStatement iq = conn.prepareStatement(query)) {
             iq.setString(1, userName);
