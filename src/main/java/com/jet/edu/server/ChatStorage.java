@@ -13,6 +13,10 @@ public class ChatStorage implements Storage {
         this.connString = connString;
     }
 
+    public ChatStorage() {
+        this.connString = "jdbc:derby://localhost:1527/chat";
+    }
+
     public void addMessage(String name, String msg) {
         String query = "INSERT INTO messages(USER_ID,MESSAGE) VALUES((SELECT id FROM USERS WHERE name=?), ?)";
         try (
