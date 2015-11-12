@@ -12,11 +12,15 @@ import java.net.Socket;
 public class Connector {
     Socket socket;
 
-    public void connector(String host, int port) throws IOException {
-        socket = new Socket(host,port);
+    public Connector(String host, int port) throws ChatException {
+        try {
+            socket = new Socket(host,port);
+        } catch (IOException e) {
+            throw new ChatException("", e);
+        }
     }
 
-    private void sendMessage(JSONObject jsonMessage) throws ChatException {
+    public void sendMessage(JSONObject jsonMessage) throws ChatException {
         try (DataOutputStream dos = new DataOutputStream(socket.getOutputStream())){
             dos.writeUTF(jsonMessage.toString());
         } catch (IOException e) {
