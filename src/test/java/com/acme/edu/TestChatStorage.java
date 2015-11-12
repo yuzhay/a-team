@@ -75,4 +75,5 @@ public class TestChatStorage {
         Assert.assertEquals(list.get(0).getString("MESSAGE"),"MESSAGE");
         Assert.assertEquals(list.get(0).getString("NICKNAME"),"Yura");
     }
+
 }
