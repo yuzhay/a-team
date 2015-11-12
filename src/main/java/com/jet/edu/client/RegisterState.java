@@ -17,5 +17,9 @@ public class RegisterState implements State {
     public void writerToConector() throws ChatException {
         connector.sendMessage(jsonObject);
     }
+
+    public void ReadConnector() {
+    }
 }
+
 

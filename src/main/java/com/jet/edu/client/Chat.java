@@ -16,24 +16,16 @@ public class Chat implements State {
     public static final String HIST = "/hist";
     public static final String SND = "/snd";
 
-    public Chat() throws ChatException {
-        connector = new Connector("127.0.0.1", 6666);
+    public Chat(String host, int port) throws ChatException {
+        connector = new Connector(host, port);
     }
 
-    public void readConsole() throws ChatException {
+    public void readConsole() throws ChatException, IOException {
+        String message;
+        BufferedReader readConsole = new BufferedReader(new InputStreamReader(System.in));
         while (true) {
-            String message;
-            BufferedReader readConsole = new BufferedReader(new InputStreamReader(System.in));
-            try {
-                message = readConsole.readLine();
-            } catch (IOException e) {
-                throw new ChatException("", e);
-            }
-            if (checkSizeMessage(message)) {
-                managerState(message);
-            } else {
-                System.out.println("ERROR: Слишком большое сообщение");
-            }
+            message = readConsole.readLine();
+            managerState(message);
         }
     }
 
@@ -41,14 +33,23 @@ public class Chat implements State {
         return message.length() < 150;
     }
 
-    private void managerState(String message) {
+    private boolean checkName(String name) {
+        return (name.length() < 50 && !name.contains(" "));
+    }
+
+    private void managerState(String message) throws ChatException {
         JSONObject jsonObject = new JSONObject();
         String[] mes = message.split(" ");
+        message = message.substring(message.indexOf(" "), message.length());
         switch (mes[0]) {
             case CHID:
-                jsonObject.put("cmd", CHID);
-                jsonObject.put("msg", message);
-                new RegisterState(jsonObject, connector);
+                if (checkName(message)) {
+                    jsonObject.put("cmd", CHID);
+                    jsonObject.put("msg", message);
+                    new RegisterState(jsonObject, connector).writerToConector();
+                }else{
+                    System.out.println("некорректное имя!");
+                }
                 break;
             case HIST:
                 jsonObject.put("cmd", HIST);
