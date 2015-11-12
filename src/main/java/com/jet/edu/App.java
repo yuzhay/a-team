@@ -1,4 +1,4 @@
-package com.acme.edu;
+package com.jet.edu;
 
 /**
  * A-Team project
