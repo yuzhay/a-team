@@ -11,6 +11,6 @@ public interface Storage {
     boolean isUserOnline(String userName);
     void setUserOffline(String userName);
     void addUser(String userName);
-    void disconnet();
+    void disconnect();
     void connect() throws SQLException;
 }

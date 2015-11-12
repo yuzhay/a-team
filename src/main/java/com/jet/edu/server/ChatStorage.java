@@ -30,11 +30,12 @@ public class ChatStorage implements Storage {
     }
 
     public String[] getHistory() {
+        //String query = "SELECT (ID)";
         return new String[0];
     }
 
     public boolean isUserOnline(String userName) {
-        String query = "SELECT ONLINE FROM APP.USERS WHERE name=?)";
+        String query = "SELECT ONLINE FROM APP.USERS WHERE name=?";
         try (PreparedStatement iq = conn.prepareStatement(query)) {
             iq.setString(1, userName);
             ResultSet result = iq.executeQuery();
@@ -48,9 +49,10 @@ public class ChatStorage implements Storage {
     }
 
     public void setUserOffline(String userName) {
-        String query = "UPDATE TABLE APP.USERS set ONLINE = 0)";
+        String query = "UPDATE APP.USERS set ONLINE = 0 WHERE name = ?";
         try (
                 PreparedStatement iq = conn.prepareStatement(query)) {
+            iq.setString(1,userName);
             iq.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -69,7 +71,7 @@ public class ChatStorage implements Storage {
     }
 
     @Override
-    public void disconnet() {
+    public void disconnect() {
         if (conn != null) {
             try {
                 conn.close();

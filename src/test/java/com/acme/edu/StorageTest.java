@@ -18,7 +18,7 @@ public class StorageTest {
         try {
             storage.connect();
             storage.addUser("Admin");
-            storage.disconnet();
+            storage.disconnect();
         } catch (SQLException e) {
             e.printStackTrace();
         }
