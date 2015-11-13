@@ -36,7 +36,7 @@ public class ChatStorage implements Storage {
      * @return if message is added succeful
      */
     @Override
-    public boolean addMessage(String name, String msg) {
+    public long addMessage(String name, String msg) {
         String query1 = "SELECT id FROM USERS WHERE name=?";
         String query2 = "INSERT INTO APP.MESSAGES (USER_ID,MESSAGE) VALUES(?, ?)";
         try {
@@ -58,12 +58,12 @@ public class ChatStorage implements Storage {
                 conn.rollback();
             } catch (SQLException e1) {
                 e1.printStackTrace();
-                return false;
+                return 0;
             }
             e.printStackTrace();
-            return false;
+            return 0;
         }
-        return true;
+        return System.currentTimeMillis() / 1000L;
     }
 
     @Override

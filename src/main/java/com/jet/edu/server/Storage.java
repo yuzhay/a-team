@@ -10,7 +10,7 @@ import java.util.List;
  * Created by Yuriy on 12.11.2015.
  */
 public interface Storage {
-    boolean addMessage(String name, String msg);
+    long addMessage(String name, String msg);
     JSONArray getHistory();
     boolean isUserOnline(String userName);
     void setUserOffline(String userName);
