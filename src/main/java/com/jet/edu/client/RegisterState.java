@@ -1,9 +1,7 @@
 package com.jet.edu.client;
 
 import org.json.JSONObject;
-
-import java.io.IOException;
-
+import com.jet.edu.Constants;
 /**
  * Created by Павел on 12.11.2015.
  */
@@ -16,18 +14,19 @@ public class RegisterState implements State {
         this.connector = connector;
     }
 
-    public void writerToConector() throws ChatException {
+    public void writerToConnector() throws ChatException {
         String fromConnector = connector.sendMessage(jsonObject);
         if (fromConnector != null) {
             JSONObject messageFromServer = new JSONObject(fromConnector);
             String message = messageFromServer.get("msg").toString();
             System.out.println(message);
         } else{
-            System.out.println("Нет соединения");
+            System.out.println(Constants.NO_CONNECTION);
         }
     }
 
-    public void ReadConnector() {
+    public void ReadConnector() throws ChatException {
+        connector.listenMessage();
     }
 }
 

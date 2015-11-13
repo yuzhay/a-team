@@ -11,10 +11,16 @@ import java.net.Socket;
 public class Connector {
     Socket socket;
     private String charset = "UTF-8";
+    private BufferedWriter bw;
+    private BufferedReader br;
 
     public Connector(String host, int port) throws ChatException {
         try {
             socket = new Socket(host, port);
+            bw = new BufferedWriter(
+                    new OutputStreamWriter(socket.getOutputStream(), charset));
+            br = new BufferedReader(
+                    new InputStreamReader(socket.getInputStream(), charset));
         } catch (IOException e) {
             throw new ChatException("", e);
         }
@@ -22,13 +28,20 @@ public class Connector {
 
     public String sendMessage(JSONObject jsonMessage) throws ChatException {
         try {
-            BufferedWriter bw = new BufferedWriter(
-                    new OutputStreamWriter(socket.getOutputStream(), charset));
-            BufferedReader br = new BufferedReader(
-                    new InputStreamReader(socket.getInputStream(), charset));
             bw.write(jsonMessage.toString() + System.lineSeparator());
             bw.flush();
             return br.readLine();
+        } catch (IOException e) {
+            throw new ChatException("", e);
+        }
+    }
+
+    public void listenMessage() throws ChatException {
+        try {
+            while(br.readLine() != null)
+            {
+                System.out.print(br.readLine());
+            }
         } catch (IOException e) {
             throw new ChatException("", e);
         }
