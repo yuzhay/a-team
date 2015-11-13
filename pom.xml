@@ -47,12 +47,6 @@
             <artifactId>derbyclient</artifactId>
             <version>10.12.1.1</version>
         </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -98,33 +92,6 @@
                     <webXml>src/main/webapp/WEB-INF/web.xml</webXml>
                     <failOnMissingWebXml>true</failOnMissingWebXml>
                 </configuration>
-            </plugin>
-
-            <!-- Separating the unit tests from the integration tests. -->
-            <!-- Plugin for executing unit tests. -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <!-- Skip execution at predefined time. We define other time ourself. -->
-                    <skip>true</skip>
-                </configuration>
-
-                <executions>
-                    <execution>
-                        <id>run-unit-tests</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>test</goal>
-                        </goals>
-                        <configuration>
-                            <skip>false</skip>
-                            <includes>
-                                <include>unit/*.java</include>
-                            </includes>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
 
             <!-- Plugin for executing sql scripts at start and end of build process -->

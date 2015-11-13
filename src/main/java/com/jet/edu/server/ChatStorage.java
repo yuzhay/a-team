@@ -3,7 +3,10 @@ package com.jet.edu.server;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Yuriy on 12.11.2015.
@@ -12,14 +15,29 @@ public class ChatStorage implements Storage {
     private final String connString;
     private Connection conn = null;
 
+    /**
+     * Constructor with provided connection string
+     *
+     * @param connString database connection string
+     */
     public ChatStorage(String connString) {
         this.connString = connString;
     }
 
+    /**
+     * Constructor with default connection string
+     */
     public ChatStorage() {
         this.connString = "jdbc:derby://localhost:1527/chat";
     }
 
+    /**
+     * Adds message to Messages table
+     *
+     * @param name author of the message
+     * @param msg  message string
+     * @return if message is added succeful
+     */
     public boolean addMessage(String name, String msg) {
         String query1 = "(SELECT id FROM USERS WHERE name=?";
         String query2 = "INSERT INTO APP.MESSAGES (USER_ID,MESSAGE) VALUES(?, ?)";
@@ -51,15 +69,20 @@ public class ChatStorage implements Storage {
 
     public void changeRoom(String roomName, String userName){
         String query = "UPDATE APP.USERS SET ROOM_ID = (SELECT ID FROM ROOMS WHERE NAME = ?) WHERE NAME = ?";
-        try (PreparedStatement iq = conn.prepareStatement(query)){
+        try (PreparedStatement iq = conn.prepareStatement(query)) {
             iq.setString(1, roomName);
-            iq.setString(2,userName);
+            iq.setString(2, userName);
             iq.executeUpdate();
-        } catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * Returns all history of the chat
+     *
+     * @return
+     */
     public JSONArray getHistory() {
         String query = "SELECT USERS.NAME, MESSAGE, TIME FROM APP.MESSAGES INNER JOIN APP.USERS ON USER_ID = USERS.ID";
         JSONArray jsonArray = new JSONArray();
@@ -85,7 +108,7 @@ public class ChatStorage implements Storage {
             iq.setString(1, userName);
             ResultSet result = iq.executeQuery();
 
-            if(result.next() == false){
+            if (result.next() == false) {
                 return false;
             }
 
@@ -108,6 +131,11 @@ public class ChatStorage implements Storage {
         }
     }
 
+    /**
+     * Register new user
+     *
+     * @param userName user name
+     */
     public void addUser(String userName) {
         String query = "INSERT INTO APP.USERS (NAME, ONLINE) VALUES(?, 1)";
         try (
@@ -119,6 +147,9 @@ public class ChatStorage implements Storage {
         }
     }
 
+    /**
+     * Disconnect from database
+     */
     @Override
     public void disconnect() {
         if (conn != null) {
@@ -130,6 +161,11 @@ public class ChatStorage implements Storage {
         }
     }
 
+    /**
+     * Connect to database
+     *
+     * @throws SQLException
+     */
     @Override
     public void connect() throws SQLException {
         conn = DriverManager.getConnection(connString);
