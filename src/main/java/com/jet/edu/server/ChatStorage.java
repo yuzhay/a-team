@@ -35,8 +35,9 @@ public class ChatStorage implements Storage {
      * @param msg  message string
      * @return if message is added succeful
      */
+    @Override
     public boolean addMessage(String name, String msg) {
-        String query1 = "(SELECT id FROM USERS WHERE name=?";
+        String query1 = "SELECT id FROM USERS WHERE name=?";
         String query2 = "INSERT INTO APP.MESSAGES (USER_ID,MESSAGE) VALUES(?, ?)";
         try {
             conn.setAutoCommit(false);
@@ -48,6 +49,7 @@ public class ChatStorage implements Storage {
 
             iq = conn.prepareStatement(query2);
             iq.setInt(1, uid);
+            iq.setString(2, msg);
             iq.executeUpdate();
 
             conn.commit();
@@ -64,7 +66,8 @@ public class ChatStorage implements Storage {
         return true;
     }
 
-    public void changeRoom(String roomName, String userName){
+    @Override
+    public void changeRoom(String roomName, String userName) {
         String query = "UPDATE APP.USERS SET ROOM_ID = (SELECT ID FROM ROOMS WHERE NAME = ?) WHERE NAME = ?";
         try (PreparedStatement iq = conn.prepareStatement(query)) {
             iq.setString(1, roomName);
@@ -80,6 +83,7 @@ public class ChatStorage implements Storage {
      *
      * @return
      */
+    @Override
     public JSONArray getHistory() {
         String query = "SELECT USERS.NAME, MESSAGE, TIME FROM APP.MESSAGES INNER JOIN APP.USERS ON USER_ID = USERS.ID";
         JSONArray jsonArray = new JSONArray();
@@ -99,6 +103,7 @@ public class ChatStorage implements Storage {
         return jsonArray;
     }
 
+    @Override
     public boolean isUserOnline(String userName) {
         String query = "SELECT ONLINE FROM APP.USERS WHERE name = ?";
         try (PreparedStatement iq = conn.prepareStatement(query)) {
@@ -117,6 +122,7 @@ public class ChatStorage implements Storage {
         }
     }
 
+    @Override
     public void setUserOffline(String userName) {
         String query = "UPDATE APP.USERS set ONLINE = 0 WHERE name = ?";
         try (
@@ -133,6 +139,7 @@ public class ChatStorage implements Storage {
      *
      * @param userName user name
      */
+    @Override
     public void addUser(String userName) {
         String query = "INSERT INTO APP.USERS (NAME, ONLINE) VALUES(?, 1)";
         try (

@@ -17,4 +17,5 @@ public interface Storage {
     void addUser(String userName);
     void disconnect();
     void connect() throws SQLException;
+    void changeRoom(String roomName, String userName);
 }
