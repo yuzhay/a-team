@@ -9,8 +9,8 @@ import java.util.logging.Logger;
  * Logger which prints to file
  */
 public class ChatLogger {
-    private Logger logger = Logger.getLogger("System");
-    private String filepath;
+    private final static Logger logger = Logger.getLogger("System");
+    private FileHandler handler;
 
     /**
      * Constructor
@@ -19,13 +19,12 @@ public class ChatLogger {
      */
     public ChatLogger(String filepath){
         try{
-            this.filepath = filepath;
-            FileHandler fileHandler = new FileHandler();
+            this.handler = new FileHandler(filepath);
             logger.setUseParentHandlers(false);
-            logger.addHandler(fileHandler);
+            logger.addHandler(handler);
         } catch (IOException e){
-            this.filepath = null;
-            this.logger.log(Level.WARNING,"ERROR WITH FILE! LOGS WILL BE WRITE INTO CONSOLE");
+            this.handler = null;
+            this.logger.log(Level.WARNING,"ERROR WITH FILE! LOGS WILL BE WRITE INTO CONSOLE", e);
         }
     }
 
@@ -33,10 +32,17 @@ public class ChatLogger {
      * print INFO message
      * @param message - message
      */
-    public void printInfo(String message){
-        logger.log(Level.INFO,message);
+    public void printInfo(String message, Throwable e){
+        logger.log(Level.INFO,message + System.lineSeparator()+ e);
     }
 
+    /**
+     * prints WARNING message
+     * @param message - message
+     */
+    public void printWarning(String message,  Throwable e){
+        logger.log(Level.WARNING,message+ System.lineSeparator()+ e);
+    }
     /**
      * prints WARNING message
      * @param message - message
@@ -49,8 +55,8 @@ public class ChatLogger {
      * prints SERVE message
      * @param message - message
      */
-    public void printSevere(String message){
-        logger.log(Level.SEVERE,message);
+    public void printSevere(String message, Throwable e){
+        logger.log(Level.SEVERE,message + System.lineSeparator()+ e);
     }
 
     public void printConsole(String message){

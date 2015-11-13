@@ -18,6 +18,7 @@ public class HistoryState implements State {
 
     /**
      * initialize connection and jsonObject
+     *
      * @param jsonObject
      * @param connector
      */
@@ -28,6 +29,7 @@ public class HistoryState implements State {
 
     /**
      * write messages to get history to Connector
+     *
      * @throws ChatException
      */
     public void writerToConnector() throws ChatException {
@@ -37,11 +39,17 @@ public class HistoryState implements State {
         JSONObject responceJson = new JSONObject(resp);
         JSONArray history = responceJson.getJSONArray("history");
         Iterator<Object> jsonObjectIterator = history.iterator();
-        while (jsonObjectIterator.hasNext()){
-            JSONObject jsonObject = (JSONObject)jsonObjectIterator.next();
-            println("name: "+jsonObject.getString("NICKNAME") +
-                    " ,message: "+jsonObject.getString("MESSAGE") +
-                    ", time:" + jsonObject.getString("TIME"));
+        while (jsonObjectIterator.hasNext()) {
+            JSONObject jsonObject = (JSONObject) jsonObjectIterator.next();
+
+            println(
+                    String.format("%s[%s]: %s",
+                            jsonObject.getString("NICKNAME"),
+                            jsonObject.getString("TIME"),
+                            jsonObject.getString("MESSAGE")
+
+                    ));
+
         }
 
     }

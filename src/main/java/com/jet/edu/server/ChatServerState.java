@@ -32,17 +32,21 @@ public class ChatServerState implements ServerState {
         OutputStreamWriter osw = client.getOutputStream();
         BufferedReader br = client.getInputStream();
 
-        String cmd, msg;
+        String cmd;
+        String msg = "";
 
         try {
             json = new JSONObject(str);
             cmd = json.getString("cmd");
-            msg = json.getString("msg");
+
+            if (json.has("msg")) {
+                msg = json.getString("msg");
+            }
         } catch (JSONException ex) {
             response.put("status", "error");
             response.put("msg", "Unknown command");
             sendResponse(response, osw);
-            logger.printWarning(response.toString());
+            logger.printSevere(response.toString(), ex);
             return;
         }
 
@@ -51,7 +55,7 @@ public class ChatServerState implements ServerState {
         try {
             storage.connect();
         } catch (SQLException e) {
-            logger.printSevere(response.toString());
+            logger.printSevere(response.toString(), e);
         }
 
         switch (cmd) {
@@ -64,12 +68,20 @@ public class ChatServerState implements ServerState {
                     return;
                 }
                 String name = json.getString("name");
-                boolean added = storage.addMessage(name, msg);
-                if (added) {
+                long timestamp = storage.addMessage(name, msg);
+                if (timestamp > 0) {
                     response.put("msg", msg);
+                    response.put("name", name);
+                    response.put("time", timestamp);
+
+                    JSONObject ownerResponse = new JSONObject();
+                    ownerResponse.put("status", "ok");
+                    sendResponse(ownerResponse, osw);
+
                     sendResponseToAll(response, osw);
                 } else {
-                    response.put("status", "Message add failed");
+                    response.put("status", "error");
+                    response.put("msg", "Can't add message");
                     sendResponse(response, osw);
                     logger.printWarning(response.toString());
                 }
@@ -99,20 +111,20 @@ public class ChatServerState implements ServerState {
             osw.flush();
             System.out.println("Server answered: '" + json.toString() + "'");
         } catch (IOException e) {
-            logger.printWarning(e.toString());
+            logger.printWarning("Connection lost", e);
             logger.printConsole("Connection closed by peer");
         }
     }
 
     private void sendResponseToAll(JSONObject json, OutputStreamWriter osw) {
         for (ClientIO c : clients.values()) {
-            if (c.getOutputStream() == osw) {
+            if (c.getOutputStream().equals(osw)) {
                 continue;
             }
             try {
                 c.getOutputStream().write(json.toString());
             } catch (IOException e) {
-                logger.printWarning(e.toString());
+                logger.printWarning("Not send Messaged to sockets", e);
             }
         }
     }
