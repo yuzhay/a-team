@@ -14,7 +14,6 @@ public class Chat{
     public static final String CHID = "/chid";
     public static final String HIST = "/hist";
     public static final String SND = "/snd";
-    private String nameSession = "";
     Scanner scanner = new Scanner(System.in);
 
     public Chat(String host, int port) throws ChatException {
@@ -24,7 +23,6 @@ public class Chat{
     public void readConsole() throws ChatException, IOException {
         String message;
         while (true) {
-            System.out.print(nameSession);
             message = scanner.nextLine();
             managerState(message);
         }
@@ -41,20 +39,16 @@ public class Chat{
     private void managerState(String messageWithCommand) throws ChatException, IOException {
         JSONObject jsonObject = new JSONObject();
         String message = messageWithCommand.substring(messageWithCommand.indexOf(" ") + 1);
-        if (messageWithCommand.contains(CHID)) {
+        if (messageWithCommand.startsWith(CHID)) {
             if (checkName(message)) {
                 jsonObject.put("cmd", CHID);
                 jsonObject.put("msg", message);
-                if (new RegisterState(jsonObject, connector).writerToConnector()){
-                    nameSession = message;
-                }
             } else {
                 System.out.println("некорректное имя!");
                 System.in.read();
             }
-        } else if (messageWithCommand.contains(HIST)) {
+        } else if (messageWithCommand.startsWith(HIST)) {
             jsonObject.put("cmd", HIST);
-       //     jsonObject.put("msg", message);
             new HistoryState(jsonObject, connector).writerToConnector();
         }else if (messageWithCommand.contains(CHROOM)){
             jsonObject.put("cmd", CHROOM);
