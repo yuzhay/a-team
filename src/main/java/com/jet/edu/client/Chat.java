@@ -10,14 +10,17 @@ import java.util.Scanner;
  */
 public class Chat{
     private Connector connector;
+    private Factory factory;
     public static final String CHROOM = "/chroom";
     public static final String CHID = "/chid";
     public static final String HIST = "/hist";
     public static final String SND = "/snd";
+
     Scanner scanner = new Scanner(System.in);
 
-    public Chat(String host, int port) throws ChatException {
-        connector = new Connector(host, port);
+    public Chat(Factory factory, Connector connector) throws ChatException {
+        this.factory = factory;
+        this.connector = connector;
     }
 
     public void readConsole() throws ChatException, IOException {
@@ -43,16 +46,23 @@ public class Chat{
             if (checkName(message)) {
                 jsonObject.put("cmd", CHID);
                 jsonObject.put("msg", message);
+                factory.setRegisterState(jsonObject, connector);
+                factory.getRegisterState().writerToConnector();
             } else {
                 System.out.println("некорректное имя!");
                 System.in.read();
             }
         } else if (messageWithCommand.startsWith(HIST)) {
             jsonObject.put("cmd", HIST);
-            new HistoryState(jsonObject, connector).writerToConnector();
+            factory.setHistoryState(jsonObject, connector);
+            factory.getHistoryState().writerToConnector();
         }else if (messageWithCommand.contains(CHROOM)){
             jsonObject.put("cmd", CHROOM);
-            new RoomState(jsonObject, connector);
+        } else {
+            jsonObject.put("cmd", SND);
+            jsonObject.put("msg", messageWithCommand);
+            factory.setSendState(jsonObject,connector);
+            factory.getSendState().writeToConnector();
         }
     }
 }

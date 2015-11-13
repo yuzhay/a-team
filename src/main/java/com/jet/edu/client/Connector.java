@@ -28,14 +28,9 @@ public class Connector {
         try {
             BufferedWriter bw = new BufferedWriter(
                     new OutputStreamWriter(socket.getOutputStream(), charset));
-//            StringBuilder sb = new StringBuilder();
-//            BufferedReader br = new BufferedReader(
-//                    new InputStreamReader(socket.getInputStream(), charset));
             InputStreamReader isr = new InputStreamReader(socket.getInputStream());
             bw.write(jsonMessage.toString() + System.lineSeparator());
             bw.flush();
-//            return isr.readLine();
-
             while (isr.ready()){
                 sb.append((char)isr.read()+"");
             }

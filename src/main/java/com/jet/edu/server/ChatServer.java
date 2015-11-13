@@ -1,7 +1,5 @@
 package com.jet.edu.server;
 
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -11,6 +9,7 @@ import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -24,84 +23,114 @@ public class ChatServer implements Server {
     private ServerSocket socket;
     private Thread serverThread;
     private Accepter accepter = new Accepter();
-    private List<Socket> clientsList = new ArrayList<>();
     //endregion
 
     //region Accepter
+
+
     private class Accepter implements Runnable {
         //region private fields
         private List<IOException> exceptionsList = new ArrayList<>();
         private ExecutorService pool = Executors.newFixedThreadPool(1000);
+        private Hashtable<Socket, ClientIO> clientStream = new Hashtable<>();
         //endregion
 
         //region public methods
+
+        /**
+         * Socket accept thread runner
+         */
         @Override
         public void run() {
+            new Thread(new OneThreadWorker()).start();
+
             while (!Thread.interrupted()) {
                 try {
                     Socket client = socket.accept();
-                    clientsList.add(client);
-                    pool.execute(new Worker(client));
+                    addClient(client);
+                    System.out.println("New client connected");
                 } catch (SocketTimeoutException ste) {
                     /*Do nothing. Time is out. Wait for next client*/
                 } catch (IOException e) {
                     exceptionsList.add(e);
                 }
             }
-            pool.shutdownNow();
         }
 
-        private class Worker implements Runnable {
-            private Socket client;
-
-            public Worker(Socket client) {
-                this.client = client;
-            }
-
-            @Override
-            public void run() {
-                try (
-                        BufferedReader br = new BufferedReader(
-                                new InputStreamReader(client.getInputStream(), charset));
-                        OutputStreamWriter osw = new OutputStreamWriter(client.getOutputStream(), charset)
-                ) {
-                    ChatServerState state = new ChatServerState();
-                    String line;
-                    while ((line = br.readLine()) != null) {
-                        JSONObject json = new JSONObject(state.switchState(line));
-
-                        if (json.getString("op").equals("SEND_TO_OTHERS")) {
-                            sendToClients(client, json.toString());
-                        } else {
-                            osw.write(json.toString());
-                            osw.flush();
-                        }
-                    }
+        private void addClient(Socket sock) {
+            synchronized (clientStream) {
+                try {
+                    clientStream.put(sock,
+                            new ClientIO(
+                                    new BufferedReader(
+                                            new InputStreamReader(sock.getInputStream(), charset)
+                                    ),
+                                    new OutputStreamWriter(sock.getOutputStream(), charset)));
                 } catch (IOException e) {
-                    exceptionsList.add(e);
                     e.printStackTrace();
                 }
             }
         }
 
-        private void sendToClients(Socket client, String message) {
-            for (Socket c : clientsList) {
-                if (c == client) {
-                    continue;
-                }
-                try (OutputStreamWriter osw = new OutputStreamWriter(client.getOutputStream(), charset)) {
-                    osw.write(message);
-                    osw.flush();
-                } catch (IOException e) {
-
-                }
+        private void removeClient(Socket sock) {
+            synchronized (clientStream) {
+                clientStream.remove(sock);
             }
         }
 
-        //endregion
+        private class OneThreadWorker implements Runnable {
+            @Override
+            public void run() {
+                ChatServerState css = new ChatServerState(clientStream);
+                while (true) {
+                    synchronized (clientStream) {
+                        for (Socket s : clientStream.keySet()) {
+                            try {
+                                BufferedReader br = clientStream.get(s).getInputStream();
+                                OutputStreamWriter osw = clientStream.get(s).getOutputStream();
+                                if (!br.ready()) {
+                                    continue;
+                                }
+
+                                String line = br.readLine();
+                                System.out.println(s.toString() + ": " + line);
+
+                                css.switchState(line, clientStream.get(s));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                removeClient(s);
+                            }
+                        }
+                    }
+                }
+            }
+
+            private void sendToClients(Socket client, String message) {
+                for (Socket s : clientStream.keySet()) {
+                    if (s == client) {
+                        continue;
+                    }
+                    try {
+                        OutputStreamWriter osw = clientStream.get(s).getOutputStream();
+                        osw.write(message);
+                        osw.flush();
+                    } catch (IOException e) {
+
+                    }
+                }
+            }
+        }
     }
+
+
+    //endregion
     //endregion
 
+    /**
+     * Default ChatServer constructor
+     *
+     * @param port set TCP port
+     */
     public ChatServer(int port) {
         try {
             socket = new ServerSocket(port);
@@ -110,6 +139,9 @@ public class ChatServer implements Server {
         }
     }
 
+    /**
+     * Start ChatServer
+     */
     public void start() {
         try {
             serverThread = new Thread(accepter);
@@ -119,7 +151,38 @@ public class ChatServer implements Server {
         }
     }
 
+    /**
+     * Stop ChatServer
+     */
     public void stop() {
         serverThread.interrupt();
     }
+}
+
+
+class ClientIO {
+    private BufferedReader br;
+    private OutputStreamWriter sw;
+
+    //region public methods
+
+    /**
+     * Default ClientIO constructor
+     * @param br
+     * @param sw
+     */
+    public ClientIO(BufferedReader br, OutputStreamWriter sw) {
+        this.br = br;
+        this.sw = sw;
+    }
+
+    public BufferedReader getInputStream() {
+        return this.br;
+    }
+
+    public OutputStreamWriter getOutputStream() {
+        return this.sw;
+    }
+
+    //endregion
 }

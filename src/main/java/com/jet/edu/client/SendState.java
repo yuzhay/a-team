@@ -14,7 +14,9 @@ public class SendState implements State {
         this.connector = connector;
     }
 
-    public void writerToConnector() {
-
+    public void writeToConnector() throws ChatException{
+        String responce = connector.sendMessage(this.jsonObject);
+        System.out.println(responce);
     }
+
 }
