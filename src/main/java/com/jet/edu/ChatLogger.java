@@ -9,8 +9,8 @@ import java.util.logging.Logger;
 /**
  * Logger which prints to file
  */
-public class ChatLogger implements Serializable {
-    private Logger logger = Logger.getLogger("System");
+public class ChatLogger {
+    private final static Logger logger = Logger.getLogger("System");
     private FileHandler handler;
 
     /**
