@@ -3,18 +3,29 @@ package com.jet.edu.client;
 import org.json.JSONObject;
 
 /**
- * Created by Павел on 12.11.2015.
+ * RegisterState send command /chid to server
+ * read answer from server
+ * print to console answer
+ * command /chid <name> - register name
  */
 public class RegisterState implements State {
     private JSONObject jsonObject;
     private Connector connector;
-    private String currentname = "";
 
+    /**
+     * initialize jsonObject and connection
+     * @param jsonObject
+     * @param connector
+     */
     public RegisterState(JSONObject jsonObject, Connector connector) {
         this.jsonObject = jsonObject;
         this.connector = connector;
     }
 
+    /**
+     * write messages registrationName to Connector
+     * @throws ChatException
+     */
     public boolean writerToConnector() throws ChatException {
         String fromConnector = connector.sendMessage(jsonObject);
         if (fromConnector != null) {
@@ -23,7 +34,7 @@ public class RegisterState implements State {
             return message.equals("OK");
             //System.out.println(message);
         } else{
-            System.out.println("Нет соединения");
+            println("Нет соединения");
             return false;
         }
     }
