@@ -1,5 +1,6 @@
 package com.jet.edu.server;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.sql.SQLException;
@@ -10,7 +11,7 @@ import java.util.List;
  */
 public interface Storage {
     void addMessage(String name, String msg);
-    List<JSONObject> getHistory();
+    JSONArray getHistory();
     boolean isUserOnline(String userName);
     void setUserOffline(String userName);
     void addUser(String userName);

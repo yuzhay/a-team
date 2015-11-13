@@ -14,8 +14,7 @@ public class SendState implements State {
         this.connector = connector;
     }
 
-    @Override
-    public void writerToConector() {
+    public void writerToConnector() {
 
     }
 }

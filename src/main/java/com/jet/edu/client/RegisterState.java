@@ -14,14 +14,16 @@ public class RegisterState implements State {
         this.connector = connector;
     }
 
-    public void writerToConector() throws ChatException {
+    public boolean writerToConnector() throws ChatException {
         String fromConnector = connector.sendMessage(jsonObject);
         if (fromConnector != null) {
             JSONObject messageFromServer = new JSONObject(fromConnector);
             String message = messageFromServer.get("msg").toString();
-            System.out.println(message);
+            return message.equals("OK");
+            //System.out.println(message);
         } else{
             System.out.println("Нет соединения");
+            return false;
         }
     }
 }
