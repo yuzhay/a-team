@@ -52,13 +52,19 @@ public class ChatServerState implements ServerState {
 
         switch (cmd) {
             case COMMAND_SND:
+                if (!json.has("name")) {
+                    response.put("status", "error");
+                    response.put("msg", "Can't find 'name' in json");
+                    sendResponse(response, osw);
+                    return;
+                }
                 String name = json.getString("name");
                 boolean added = storage.addMessage(name, msg);
-                if(added) {
+                if (added) {
                     response.put("msg", msg);
                     sendResponseToAll(response, osw);
-                }else{
-                    response.put("status", "error");
+                } else {
+                    response.put("status", "Message add failed");
                     sendResponse(response, osw);
                 }
                 return;
