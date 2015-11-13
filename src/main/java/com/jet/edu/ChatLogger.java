@@ -1,6 +1,7 @@
 package com.jet.edu;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -8,7 +9,7 @@ import java.util.logging.Logger;
 /**
  * Logger which prints to file
  */
-public class ChatLogger {
+public class ChatLogger implements Serializable {
     private Logger logger = Logger.getLogger("System");
     private String filepath;
 
