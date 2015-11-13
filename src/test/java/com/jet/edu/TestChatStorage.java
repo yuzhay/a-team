@@ -27,13 +27,6 @@ public class TestChatStorage {
     }
 
     @Test
-    @Ignore
-    public void ShouldConnectToDb() throws Exception {
-        chatStorage.connect();
-    }
-
-
-    @Test
     public void shouldCorrectlyReturnOnlineStatus() throws Exception {
         chatStorage.connect();
 
