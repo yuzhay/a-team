@@ -15,6 +15,7 @@ public class Chat implements State {
     public static final String CHID = "/chid";
     public static final String HIST = "/hist";
     public static final String SND = "/snd";
+
     Scanner scanner = new Scanner(System.in);
 
     public Chat(String host, int port) throws ChatException {
@@ -54,6 +55,11 @@ public class Chat implements State {
             jsonObject.put("cmd", HIST);
             jsonObject.put("msg", message);
             new HistoryState(jsonObject, connector).writeToConnector();
+        }
+        else {
+            jsonObject.put("cmd", SND);
+            jsonObject.put("msg", messageWithCommand);
+            new SendState(jsonObject, connector).writeToConnector();
         }
 //            String[] mes = message.split(" ");
 //            message = message.substring(message.indexOf(" ") + 1, message.length());
