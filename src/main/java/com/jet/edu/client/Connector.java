@@ -36,8 +36,8 @@ public class Connector {
     public String sendMessage(JSONObject jsonMessage) throws ChatException {
         StringBuilder sb = new StringBuilder();
         try (BufferedWriter bw = new BufferedWriter(
-                    new OutputStreamWriter(socket.getOutputStream(), charset));) {
-            InputStreamReader isr = new InputStreamReader(socket.getInputStream());
+                    new OutputStreamWriter(socket.getOutputStream(), charset));
+            InputStreamReader isr = new InputStreamReader(socket.getInputStream());) {
             bw.write(jsonMessage.toString() + System.lineSeparator());
             bw.flush();
             while (isr.ready()){
