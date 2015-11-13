@@ -47,7 +47,8 @@ public class TestChatStorage {
     public void shouldCorrectlyReturnOnlineStatus() throws Exception{
         chatStorage.connect();
 
-        Assert.assertFalse(chatStorage.isUserOnline("Yura"));   }
+        Assert.assertFalse(chatStorage.isUserOnline("Yura"));
+    }
 
     @Test
     public void shouldSetOffline() throws Exception{
@@ -73,5 +74,12 @@ public class TestChatStorage {
         Assert.assertEquals(jsonArray.getJSONObject(0).getString("MESSAGE"),"Hello world!");
         Assert.assertEquals(jsonArray.getJSONObject(0).getString("NICKNAME"),"Yura");
     }
+
+    @Test
+    public void shouldCorrectly() throws Exception{
+        chatStorage.connect();
+        chatStorage.changeRoom("SuperRoom","Yura");
+    }
+
 
 }

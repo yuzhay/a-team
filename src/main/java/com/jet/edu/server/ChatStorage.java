@@ -3,6 +3,7 @@ package com.jet.edu.server;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +52,17 @@ public class ChatStorage implements Storage {
         return true;
     }
 
+    public void changeRoom(String roomName, String userName){
+        String query = "UPDATE APP.USERS SET ROOM_ID = (SELECT ID FROM ROOMS WHERE NAME = ?) WHERE NAME = ?";
+        try (PreparedStatement iq = conn.prepareStatement(query)){
+            iq.setString(1, roomName);
+            iq.setString(2,userName);
+            iq.executeUpdate();
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
     public JSONArray getHistory() {
         String query = "SELECT USERS.NAME, MESSAGE, TIME FROM APP.MESSAGES INNER JOIN APP.USERS ON USER_ID = USERS.ID";
         JSONArray jsonArray = new JSONArray();
@@ -71,7 +83,7 @@ public class ChatStorage implements Storage {
     }
 
     public boolean isUserOnline(String userName) {
-        String query = "SELECT ONLINE FROM APP.USERS WHERE name=?";
+        String query = "SELECT ONLINE FROM APP.USERS WHERE name = ?";
         try (PreparedStatement iq = conn.prepareStatement(query)) {
             iq.setString(1, userName);
             ResultSet result = iq.executeQuery();

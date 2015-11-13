@@ -10,6 +10,7 @@ import java.io.IOException;
 public class RegisterState implements State {
     private JSONObject jsonObject;
     private Connector connector;
+    private String currentname = "";
 
     public RegisterState(JSONObject jsonObject, Connector connector) {
         this.jsonObject = jsonObject;
