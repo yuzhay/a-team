@@ -1,9 +1,8 @@
 package com.jet.edu.server;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import com.jet.edu.ChatLogger;
+
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
@@ -23,6 +22,7 @@ public class ChatServer implements Server {
     private ServerSocket socket;
     private Thread serverThread;
     private Accepter accepter = new Accepter();
+    private ChatLogger chatLogger = new ChatLogger(System.getProperty("user.home")+ File.separator +"logger.txt");
     //endregion
 
     /**
@@ -33,7 +33,7 @@ public class ChatServer implements Server {
             serverThread = new Thread(accepter);
             serverThread.start();
         } catch (RuntimeException ex) {
-            /*TODO: handle*/
+            chatLogger.printSevere(ex.toString());
         }
     }
 
@@ -67,7 +67,7 @@ public class ChatServer implements Server {
                     addClient(client);
                     System.out.println("New client connected");
                 } catch (SocketTimeoutException ste) {
-                    /*Do nothing. Time is out. Wait for next client*/
+                    chatLogger.printSevere(ste.toString());
                 } catch (IOException e) {
                     exceptionsList.add(e);
                 }
@@ -84,7 +84,7 @@ public class ChatServer implements Server {
                                     ),
                                     new OutputStreamWriter(sock.getOutputStream(), charset)));
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    chatLogger.printSevere(e.toString());
                 }
             }
         }
@@ -114,7 +114,7 @@ public class ChatServer implements Server {
 
                                 css.switchState(line, clientStream.get(s));
                             } catch (IOException e) {
-                                e.printStackTrace();
+                                chatLogger.printSevere(e.toString());
                                 removeClient(s);
                             }
                         }
@@ -132,7 +132,7 @@ public class ChatServer implements Server {
                         osw.write(message);
                         osw.flush();
                     } catch (IOException e) {
-
+                        chatLogger.printSevere(e.toString());
                     }
                 }
             }
@@ -150,7 +150,7 @@ public class ChatServer implements Server {
         try {
             socket = new ServerSocket(port);
         } catch (IOException e) {
-            /*TODO: handle*/
+            chatLogger.printSevere(e.toString());
         }
     }
 
