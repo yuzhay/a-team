@@ -53,4 +53,8 @@ public class ChatLogger {
         logger.log(Level.SEVERE,message);
     }
 
+    public void printConsole(String message){
+        System.out.print(message);
+    }
+
 }

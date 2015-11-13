@@ -2,7 +2,10 @@ package com.jet.edu.server;
 
 import com.jet.edu.ChatLogger;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
@@ -10,8 +13,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+
 
 /**
  * Created by Yuriy on 12.11.2015.
@@ -19,10 +21,11 @@ import java.util.concurrent.Executors;
 public class ChatServer implements Server {
     //region private fields
     private final Charset charset = Charset.forName("utf-8");
+    private final ChatLogger logger = new ChatLogger("ChatServer.log");
+    ;
     private ServerSocket socket;
     private Thread serverThread;
     private Accepter accepter = new Accepter();
-    private ChatLogger chatLogger = new ChatLogger(System.getProperty("user.home")+ File.separator +"logger.txt");
     //endregion
 
     /**
@@ -33,7 +36,7 @@ public class ChatServer implements Server {
             serverThread = new Thread(accepter);
             serverThread.start();
         } catch (RuntimeException ex) {
-            chatLogger.printSevere(ex.toString());
+            logger.printSevere("Server can't start on localhost");
         }
     }
 
@@ -42,13 +45,13 @@ public class ChatServer implements Server {
      */
     public void stop() {
         serverThread.interrupt();
+        logger.printConsole("Server stopped");
     }
 
     //region Accepter
     private class Accepter implements Runnable {
         //region private fields
         private List<IOException> exceptionsList = new ArrayList<>();
-        private ExecutorService pool = Executors.newFixedThreadPool(1000);
         private Hashtable<Socket, ClientIO> clientStream = new Hashtable<>();
         //endregion
 
@@ -65,11 +68,12 @@ public class ChatServer implements Server {
                 try {
                     Socket client = socket.accept();
                     addClient(client);
-                    System.out.println("New client connected");
+                    logger.printConsole("New client connected");
                 } catch (SocketTimeoutException ste) {
-                    chatLogger.printSevere(ste.toString());
                 } catch (IOException e) {
-                    exceptionsList.add(e);
+                    addException(e);
+                    logger.printWarning(e.toString());
+                    logger.printConsole("Client socket IO error. See log.");
                 }
             }
         }
@@ -84,7 +88,8 @@ public class ChatServer implements Server {
                                     ),
                                     new OutputStreamWriter(sock.getOutputStream(), charset)));
                 } catch (IOException e) {
-                    chatLogger.printSevere(e.toString());
+                    addException(e);
+                    logger.printSevere("Server can't start on localhost:");
                 }
             }
         }
@@ -93,12 +98,13 @@ public class ChatServer implements Server {
             synchronized (clientStream) {
                 clientStream.remove(sock);
             }
+            logger.printConsole("Client disconnected: " + sock);
         }
 
         private class OneThreadWorker implements Runnable {
             @Override
             public void run() {
-                ChatServerState css = new ChatServerState(clientStream);
+                ChatServerState css = new ChatServerState(clientStream, logger);
                 while (true) {
                     synchronized (clientStream) {
                         for (Socket s : clientStream.keySet()) {
@@ -114,7 +120,6 @@ public class ChatServer implements Server {
 
                                 css.switchState(line, clientStream.get(s));
                             } catch (IOException e) {
-                                chatLogger.printSevere(e.toString());
                                 removeClient(s);
                             }
                         }
@@ -132,9 +137,16 @@ public class ChatServer implements Server {
                         osw.write(message);
                         osw.flush();
                     } catch (IOException e) {
-                        chatLogger.printSevere(e.toString());
+                        addException(e);
+                        logger.printWarning(e.toString());
                     }
                 }
+            }
+        }
+
+        private void addException(IOException ex) {
+            synchronized (exceptionsList) {
+                exceptionsList.add(ex);
             }
         }
     }
@@ -150,7 +162,7 @@ public class ChatServer implements Server {
         try {
             socket = new ServerSocket(port);
         } catch (IOException e) {
-            chatLogger.printSevere(e.toString());
+            logger.printSevere("Server can't bind localhost:" + port);
         }
     }
 
