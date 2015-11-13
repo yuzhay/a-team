@@ -40,7 +40,7 @@ public class RegisterState implements State {
 
     private boolean checkMessageFromServer(String msgFromServer) {
         JSONObject messageFromServer = new JSONObject(msgFromServer);
-        String message = messageFromServer.get("msg").toString();
+        String message = messageFromServer.get("status").toString();
         if (message.equals("OK")){
             return true;
         }else{

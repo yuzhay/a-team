@@ -2,7 +2,6 @@ package com.jet.edu.client;
 
 import org.json.JSONObject;
 
-import javax.net.ssl.SSLSocketFactory;
 import java.io.*;
 import java.net.Socket;
 
@@ -26,7 +25,7 @@ public class Connector {
      */
     public Connector(String host, int port) throws ChatException {
         try {
-            socket = SSLSocketFactory.getDefault().createSocket(host, port);
+            socket = new Socket(host, port);
             bw = new BufferedWriter(
                     new OutputStreamWriter(socket.getOutputStream(), charset));
             br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -51,4 +50,5 @@ public class Connector {
             throw new ChatException("", e);
         }
     }
+
 }
