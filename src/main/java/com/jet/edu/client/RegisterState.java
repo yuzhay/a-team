@@ -14,6 +14,7 @@ public class RegisterState implements State {
 
     /**
      * initialize jsonObject and connection
+     *
      * @param jsonObject
      * @param connector
      */
@@ -24,17 +25,25 @@ public class RegisterState implements State {
 
     /**
      * write messages registrationName to Connector
+     *
      * @throws ChatException
      */
     public boolean writerToConnector() throws ChatException {
         String fromConnector = connector.sendMessage(jsonObject);
         if (fromConnector != null) {
-            JSONObject messageFromServer = new JSONObject(fromConnector);
-            String message = messageFromServer.get("msg").toString();
-            return message.equals("OK");
-            //System.out.println(message);
-        } else{
+           return checkMessageFromServer(fromConnector);
+        } else {
             println("Нет соединения");
+            return false;
+        }
+    }
+
+    private boolean checkMessageFromServer(String msgFromServer) {
+        JSONObject messageFromServer = new JSONObject(msgFromServer);
+        String message = messageFromServer.get("msg").toString();
+        if (message.equals("OK")){
+            return true;
+        }else{
             return false;
         }
     }

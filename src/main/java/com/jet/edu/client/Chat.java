@@ -11,7 +11,6 @@ import java.util.Scanner;
 public class Chat{
     private final Connector connector;
     private final Factory factory;
-//    public static final String CHROOM = "/chroom";
     public static final String CHID = "/chid";
     public static final String HIST = "/hist";
     public static final String SND = "/snd";
@@ -62,7 +61,9 @@ public class Chat{
                 jsonObject.put("cmd", CHID);
                 jsonObject.put("msg", message);
                 factory.setRegisterState(jsonObject, connector);
-                factory.getRegisterState().writerToConnector();
+                if (!factory.getRegisterState().writerToConnector()){
+                    System.out.println("Введите имя заново");
+                }
             } else {
                 System.out.println("некорректное имя!");
             }
