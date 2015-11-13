@@ -12,9 +12,15 @@ import java.util.Iterator;
  * Command /hist -  wait history of messaged
  */
 public class HistoryState implements State {
+
     private JSONObject jsonObject;
     private Connector connector;
 
+    /**
+     * initialize connection and jsonObject
+     * @param jsonObject
+     * @param connector
+     */
     public HistoryState(JSONObject jsonObject, Connector connector) {
         this.jsonObject = jsonObject;
         this.connector = connector;
@@ -24,7 +30,7 @@ public class HistoryState implements State {
      * write messages to get history to Connector
      * @throws ChatException
      */
-    public void writeToConnector() throws ChatException {
+    public void writerToConnector() throws ChatException {
         String resp = connector.sendMessage(this.jsonObject);
         if (resp.equals(""))
             return;
@@ -40,10 +46,4 @@ public class HistoryState implements State {
         }
 
     }
-
-    /**
-     * read messages
-     */
-//    public void ReadConnector() {
-//    }
 }

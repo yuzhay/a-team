@@ -94,33 +94,6 @@
                 </configuration>
             </plugin>
 
-            <!-- Separating the unit tests from the integration tests. -->
-            <!-- Plugin for executing unit tests. -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <!-- Skip execution at predefined time. We define other time ourself. -->
-                    <skip>true</skip>
-                </configuration>
-
-                <executions>
-                    <execution>
-                        <id>run-unit-tests</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>test</goal>
-                        </goals>
-                        <configuration>
-                            <skip>false</skip>
-                            <includes>
-                                <include>unit/*.java</include>
-                            </includes>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
             <!-- Plugin for executing sql scripts at start and end of build process -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>

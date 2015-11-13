@@ -1,7 +1,5 @@
 package com.jet.edu.client;
 
-import java.io.IOException;
-
 /**
  * ChatException catch exceptions
  */

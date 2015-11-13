@@ -1,7 +1,7 @@
 package com.jet.edu.client;
 
 import org.json.JSONObject;
-import com.jet.edu.Constants;
+
 /**
  * RegisterState send command /chid to server
  * read answer from server
@@ -11,7 +11,6 @@ import com.jet.edu.Constants;
 public class RegisterState implements State {
     private JSONObject jsonObject;
     private Connector connector;
-    private String currentname = "";
 
     /**
      * initialize jsonObject and connection
@@ -27,23 +26,18 @@ public class RegisterState implements State {
      * write messages registrationName to Connector
      * @throws ChatException
      */
-    public void writeToConnector() throws ChatException {
+    public boolean writerToConnector() throws ChatException {
         String fromConnector = connector.sendMessage(jsonObject);
         if (fromConnector != null) {
             JSONObject messageFromServer = new JSONObject(fromConnector);
             String message = messageFromServer.get("msg").toString();
-            System.out.println(message);
+            return message.equals("OK");
+            //System.out.println(message);
         } else{
-            System.out.println(Constants.NO_CONNECTION);
+            System.out.println("Нет соединения");
+            return false;
         }
     }
-
-    /**
-     * read messages
-     */
-//    public void ReadConnector() {
-//        //System.out.println(connector);
-//    }
 }
 
 
