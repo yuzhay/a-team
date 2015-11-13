@@ -43,7 +43,7 @@ public class HistoryState implements State {
             JSONObject jsonObject = (JSONObject) jsonObjectIterator.next();
 
             println(
-                    String.format("%s[%s]: %s",
+                    String.format("%s[%s]:\t%s",
                             jsonObject.getString("NICKNAME"),
                             jsonObject.getString("TIME"),
                             jsonObject.getString("MESSAGE")

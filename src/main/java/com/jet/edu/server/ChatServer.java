@@ -2,10 +2,7 @@ package com.jet.edu.server;
 
 import com.jet.edu.ChatLogger;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
@@ -87,7 +84,9 @@ public class ChatServer implements Server {
                                     new BufferedReader(
                                             new InputStreamReader(sock.getInputStream(), charset)
                                     ),
-                                    new OutputStreamWriter(sock.getOutputStream(), charset)));
+                                    new OutputStreamWriter(sock.getOutputStream(), charset),
+                                    new BufferedInputStream(sock.getInputStream()))
+                    );
                 } catch (IOException e) {
                     addException(e);
                     logger.printSevere("Server can't start on localhost:", e);
@@ -112,7 +111,9 @@ public class ChatServer implements Server {
                             try {
                                 BufferedReader br = clientStream.get(s).getInputStream();
                                 OutputStreamWriter osw = clientStream.get(s).getOutputStream();
-                                if (!br.ready()) {
+                                BufferedInputStream bis = clientStream.get(s).getBufferedInputStream();
+
+                                if (bis.available() == 0) {
                                     continue;
                                 }
 
@@ -174,7 +175,7 @@ public class ChatServer implements Server {
 class ClientIO {
     private BufferedReader br;
     private OutputStreamWriter sw;
-
+    private BufferedInputStream bis;
     //region public methods
 
     /**
@@ -183,9 +184,10 @@ class ClientIO {
      * @param br socket input stream
      * @param sw socket output stream
      */
-    public ClientIO(BufferedReader br, OutputStreamWriter sw) {
+    public ClientIO(BufferedReader br, OutputStreamWriter sw, BufferedInputStream bis) {
         this.br = br;
         this.sw = sw;
+        this.bis = bis;
     }
 
     /**
@@ -195,6 +197,15 @@ class ClientIO {
      */
     public BufferedReader getInputStream() {
         return this.br;
+    }
+
+    /**
+     * Get socket buffered input stream
+     *
+     * @return input stream
+     */
+    public BufferedInputStream getBufferedInputStream() {
+        return this.bis;
     }
 
     /**
