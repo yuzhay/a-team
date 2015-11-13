@@ -55,12 +55,12 @@ public class Chat {
     }
 
     private void managerState(String messageWithCommand) throws ChatException {
-        JSONObject jsonObject = new JSONObject();
         String message = messageWithCommand.substring(messageWithCommand.indexOf(" ") + 1);
         if (!checkSizeMessage(message) || messageWithCommand.equals(message)) {
             System.out.println("некорректное сообщение!");
             return;
         }
+        JSONObject jsonObject = new JSONObject();
         if (messageWithCommand.startsWith(CHID)) {
             if (checkName(message)) {
                 jsonObject.put("cmd", CHID);
