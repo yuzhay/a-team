@@ -11,15 +11,13 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * Created by Yuriy on 12.11.2015.
  */
 public class ChatServer implements Server {
     //region private fields
-    private final Charset charset = Charset.forName("utf-8");
+    private static final Charset charset = Charset.forName("utf-8");
     private ServerSocket socket;
     private Thread serverThread;
     private Accepter accepter = new Accepter();
@@ -28,6 +26,7 @@ public class ChatServer implements Server {
     /**
      * Start ChatServer
      */
+    @Override
     public void start() {
         try {
             serverThread = new Thread(accepter);
@@ -40,6 +39,7 @@ public class ChatServer implements Server {
     /**
      * Stop ChatServer
      */
+    @Override
     public void stop() {
         serverThread.interrupt();
     }
@@ -48,12 +48,10 @@ public class ChatServer implements Server {
     private class Accepter implements Runnable {
         //region private fields
         private List<IOException> exceptionsList = new ArrayList<>();
-        private ExecutorService pool = Executors.newFixedThreadPool(1000);
         private Hashtable<Socket, ClientIO> clientStream = new Hashtable<>();
         //endregion
 
         //region public methods
-
         /**
          * Socket accept thread runner
          */

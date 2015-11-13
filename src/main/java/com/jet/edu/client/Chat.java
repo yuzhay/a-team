@@ -2,7 +2,6 @@ package com.jet.edu.client;
 
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.Scanner;
 
 /**
@@ -15,7 +14,6 @@ public class Chat{
     public static final String CHID = "/chid";
     public static final String HIST = "/hist";
     public static final String SND = "/snd";
-
     Scanner scanner = new Scanner(System.in);
 
     public Chat(Factory factory, Connector connector) throws ChatException {
@@ -23,7 +21,7 @@ public class Chat{
         this.connector = connector;
     }
 
-    public void readConsole() throws ChatException, IOException {
+    public void readConsole() throws ChatException {
         String message;
         while (true) {
             message = scanner.nextLine();
@@ -39,7 +37,7 @@ public class Chat{
         return (name.length() < 50 && !name.contains(" "));
     }
 
-    private void managerState(String messageWithCommand) throws ChatException, IOException {
+    private void managerState(String messageWithCommand) throws ChatException {
         JSONObject jsonObject = new JSONObject();
         String message = messageWithCommand.substring(messageWithCommand.indexOf(" ") + 1);
         if (messageWithCommand.startsWith(CHID)) {
@@ -50,7 +48,6 @@ public class Chat{
                 factory.getRegisterState().writerToConnector();
             } else {
                 System.out.println("некорректное имя!");
-                System.in.read();
             }
         } else if (messageWithCommand.startsWith(HIST)) {
             jsonObject.put("cmd", HIST);
