@@ -34,7 +34,7 @@ public class RegisterState implements State {
             return message.equals("OK");
             //System.out.println(message);
         } else{
-            System.out.println("Нет соединения");
+            println("Нет соединения");
             return false;
         }
     }

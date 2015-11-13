@@ -9,14 +9,13 @@ import java.util.Scanner;
  * and send readed messages
  */
 public class Chat{
-    private Connector connector;
-    private Factory factory;
-    public static final String CHROOM = "/chroom";
+    private final Connector connector;
+    private final Factory factory;
+//    public static final String CHROOM = "/chroom";
     public static final String CHID = "/chid";
     public static final String HIST = "/hist";
     public static final String SND = "/snd";
-
-    Scanner scanner = new Scanner(System.in);
+    private Scanner scanner = new Scanner(System.in);
 
     /**
      * initialize port and host
@@ -43,9 +42,9 @@ public class Chat{
         }
     }
 
-    private boolean checkSizeMessage(String message) {
-        return message.length() < 150;
-    }
+//    private boolean checkSizeMessage(String message) {
+//        return message.length() < 150;
+//    }
 
     private boolean checkName(String name) {
         return (name.length() >0 && name.length() < 50 && !name.contains(" "));
@@ -67,8 +66,6 @@ public class Chat{
             jsonObject.put("cmd", HIST);
             factory.setHistoryState(jsonObject, connector);
             factory.getHistoryState().writerToConnector();
-        }else if (messageWithCommand.contains(CHROOM)){
-            jsonObject.put("cmd", CHROOM);
         } else {
             jsonObject.put("cmd", SND);
             jsonObject.put("msg", messageWithCommand);

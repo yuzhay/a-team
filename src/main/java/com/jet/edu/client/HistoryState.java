@@ -40,9 +40,9 @@ public class HistoryState implements State {
         Iterator<Object> jsonObjectIterator = history.iterator();
         while (jsonObjectIterator.hasNext()){
             JSONObject jsonObject = (JSONObject)jsonObjectIterator.next();
-            System.out.print("name: "+jsonObject.getString("NICKNAME"));
-            System.out.print(" ,message: "+jsonObject.getString("MESSAGE"));
-            System.out.println(", time:" + jsonObject.getString("TIME"));
+            println("name: "+jsonObject.getString("NICKNAME") +
+                    " ,message: "+jsonObject.getString("MESSAGE") +
+                    ", time:" + jsonObject.getString("TIME"));
         }
 
     }
