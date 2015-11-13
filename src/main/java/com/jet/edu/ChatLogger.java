@@ -25,7 +25,7 @@ public class ChatLogger {
             logger.addHandler(fileHandler);
         } catch (IOException e){
             this.filepath = null;
-            this.logger.log(Level.WARNING,"ERROR WITH FILE! LOGS WILL BE WRITE INTO CONSOLE");
+            this.logger.log(Level.WARNING,"ERROR WITH FILE! LOGS WILL BE WRITE INTO CONSOLE", e);
         }
     }
 
