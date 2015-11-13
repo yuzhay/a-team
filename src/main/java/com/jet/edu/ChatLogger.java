@@ -33,10 +33,17 @@ public class ChatLogger {
      * print INFO message
      * @param message - message
      */
-    public void printInfo(String message){
-        logger.log(Level.INFO,message);
+    public void printInfo(String message, Throwable e){
+        logger.log(Level.INFO,message + System.lineSeparator()+ e);
     }
 
+    /**
+     * prints WARNING message
+     * @param message - message
+     */
+    public void printWarning(String message,  Throwable e){
+        logger.log(Level.WARNING,message+ System.lineSeparator()+ e);
+    }
     /**
      * prints WARNING message
      * @param message - message

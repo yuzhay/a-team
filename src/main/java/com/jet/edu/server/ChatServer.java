@@ -35,7 +35,7 @@ public class ChatServer implements Server {
             serverThread = new Thread(accepter);
             serverThread.start();
         } catch (RuntimeException ex) {
-            logger.printSevere("Server can't start on localhost");
+            logger.printSevere("Server can't start on localhost", ex);
         }
     }
 
@@ -69,7 +69,7 @@ public class ChatServer implements Server {
                     addClient(client);
                     logger.printConsole("New client connected");
                 } catch (SocketTimeoutException ex) {
-                    logger.printWarning(ex.toString());
+                    logger.printWarning("timeout", ex);
                     /*Do nothing. Time is out. Wait for next client*/
                 } catch (IOException e) {
                     addException(e);
@@ -90,7 +90,7 @@ public class ChatServer implements Server {
                                     new OutputStreamWriter(sock.getOutputStream(), charset)));
                 } catch (IOException e) {
                     addException(e);
-                    logger.printSevere("Server can't start on localhost:");
+                    logger.printSevere("Server can't start on localhost:", e);
                 }
             }
         }
@@ -164,7 +164,7 @@ public class ChatServer implements Server {
         try {
             socket = new ServerSocket(port);
         } catch (IOException e) {
-            logger.printSevere("Server can't bind localhost:" + port);
+            logger.printSevere("Server can't bind localhost:" + port, e);
         }
     }
 

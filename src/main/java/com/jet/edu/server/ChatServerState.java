@@ -42,7 +42,7 @@ public class ChatServerState implements ServerState {
             response.put("status", "error");
             response.put("msg", "Unknown command");
             sendResponse(response, osw);
-            logger.printWarning(response.toString());
+            logger.printSevere(response.toString(), ex);
             return;
         }
 
@@ -51,7 +51,7 @@ public class ChatServerState implements ServerState {
         try {
             storage.connect();
         } catch (SQLException e) {
-            logger.printSevere(response.toString());
+            logger.printSevere(response.toString(),e);
         }
 
         switch (cmd) {
