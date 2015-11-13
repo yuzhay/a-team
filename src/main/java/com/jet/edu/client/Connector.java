@@ -26,7 +26,7 @@ public class Connector {
      */
     public Connector(String host, int port) throws ChatException {
         try {
-            socket = SSLSocketFactory.getDefault().createSocket(host, port);
+            socket = new Socket(host, port);
             bw = new BufferedWriter(
                     new OutputStreamWriter(socket.getOutputStream(), charset));
             br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
