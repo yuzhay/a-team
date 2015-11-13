@@ -32,12 +32,16 @@ public class ChatServerState implements ServerState {
         OutputStreamWriter osw = client.getOutputStream();
         BufferedReader br = client.getInputStream();
 
-        String cmd, msg;
+        String cmd;
+        String msg = "";
 
         try {
             json = new JSONObject(str);
             cmd = json.getString("cmd");
-            msg = json.getString("msg");
+
+            if (json.has("msg")) {
+                msg = json.getString("msg");
+            }
         } catch (JSONException ex) {
             response.put("status", "error");
             response.put("msg", "Unknown command");
@@ -51,7 +55,7 @@ public class ChatServerState implements ServerState {
         try {
             storage.connect();
         } catch (SQLException e) {
-            logger.printSevere(response.toString(),e);
+            logger.printSevere(response.toString(), e);
         }
 
         switch (cmd) {

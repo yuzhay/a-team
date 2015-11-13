@@ -57,14 +57,24 @@ public class Chat {
     private void managerState(String messageWithCommand) throws ChatException {
         JSONObject jsonObject = new JSONObject();
         String message = messageWithCommand.substring(messageWithCommand.indexOf(" ") + 1);
-        if (!checkSizeMessage(message) || messageWithCommand.equals(message)) {
+
+        if (messageWithCommand.trim().equals(SND)) {
             System.out.println("некорректное сообщение!");
             return;
         }
+
+        /*if (!checkSizeMessage(message) || messageWithCommand.equals(message)) {
+            System.out.println("некорректное сообщение!");
+            return;
+        }*/
         if (messageWithCommand.startsWith(CHID)) {
             if (checkName(message)) {
                 jsonObject.put("cmd", CHID);
                 jsonObject.put("msg", message);
+                if (!checkName(message)) {
+                    System.out.println("некорректное имя!");
+                    return;
+                }
                 factory.setRegisterState(jsonObject, connector);
                 if (!factory.getRegisterState().writerToConnector()) {
                     System.out.println("Введите имя заново");
@@ -79,6 +89,10 @@ public class Chat {
             factory.setHistoryState(jsonObject, connector);
             factory.getHistoryState().writerToConnector();
         } else {
+            if (!checkSizeMessage(message)) {
+                System.out.println("некорректное сообщение!");
+                return;
+            }
             jsonObject.put("cmd", SND);
             jsonObject.put("msg", message);
             jsonObject.put("name", userName);
