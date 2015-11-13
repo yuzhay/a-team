@@ -57,7 +57,9 @@ public class Chat{
                 jsonObject.put("cmd", CHID);
                 jsonObject.put("msg", message);
                 factory.setRegisterState(jsonObject, connector);
-                factory.getRegisterState().writerToConnector();
+                if (!factory.getRegisterState().writerToConnector()){
+                    System.out.println("Введите имя заново");
+                }
             } else {
                 System.out.println("некорректное имя!");
             }
