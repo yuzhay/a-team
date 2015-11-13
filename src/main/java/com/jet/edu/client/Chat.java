@@ -42,9 +42,9 @@ public class Chat{
         }
     }
 
-//    private boolean checkSizeMessage(String message) {
-//        return message.length() < 150;
-//    }
+    private boolean checkSizeMessage(String message) {
+        return message.length() < 150;
+    }
 
     private boolean checkName(String name) {
         return (name.length() >0 && name.length() < 50 && !name.contains(" "));
@@ -53,6 +53,10 @@ public class Chat{
     private void managerState(String messageWithCommand) throws ChatException {
         JSONObject jsonObject = new JSONObject();
         String message = messageWithCommand.substring(messageWithCommand.indexOf(" ") + 1);
+        if (!checkSizeMessage(message) || messageWithCommand.equals(message)) {
+            System.out.println("некорректное сообщение!");
+            return;
+        }
         if (messageWithCommand.startsWith(CHID)) {
             if (checkName(message)) {
                 jsonObject.put("cmd", CHID);
