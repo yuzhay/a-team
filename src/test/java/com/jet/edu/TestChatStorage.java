@@ -6,6 +6,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.*;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.Iterator;
 import java.util.List;
 
@@ -44,6 +46,7 @@ public class TestChatStorage {
     @Ignore
     public void shouldCorrectlyGetHistory() throws Exception {
         chatStorage.connect();
+
 
 
         JSONArray jsonArray = chatStorage.getHistory();
