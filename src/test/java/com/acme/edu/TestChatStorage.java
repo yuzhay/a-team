@@ -2,6 +2,7 @@ package com.acme.edu;
 
 
 import com.jet.edu.server.ChatStorage;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.*;
 
@@ -46,7 +47,8 @@ public class TestChatStorage {
     public void shouldCorrectlyReturnOnlineStatus() throws Exception{
         chatStorage.connect();
 
-        Assert.assertFalse(chatStorage.isUserOnline("Yura"));   }
+        Assert.assertFalse(chatStorage.isUserOnline("Yura"));
+    }
 
     @Test
     public void shouldSetOffline() throws Exception{
@@ -66,14 +68,18 @@ public class TestChatStorage {
     public void shouldCorrectlyGetHistory() throws Exception{
         chatStorage.connect();
 
-        Iterator<JSONObject> it = chatStorage.getHistory().iterator();
-        while (it.hasNext()){
-            System.out.println(it.next().toString());
-        }
 
-        List<JSONObject> list = chatStorage.getHistory();
-        Assert.assertEquals(list.get(0).getString("MESSAGE"),"MESSAGE");
-        Assert.assertEquals(list.get(0).getString("NICKNAME"),"Yura");
+        JSONArray jsonArray = chatStorage.getHistory();
+
+        Assert.assertEquals(jsonArray.getJSONObject(0).getString("MESSAGE"),"Hello world!");
+        Assert.assertEquals(jsonArray.getJSONObject(0).getString("NICKNAME"),"Yura");
     }
+
+    @Test
+    public void shouldCorrectly() throws Exception{
+        chatStorage.connect();
+        chatStorage.changeRoom("SuperRoom","Yura");
+    }
+
 
 }

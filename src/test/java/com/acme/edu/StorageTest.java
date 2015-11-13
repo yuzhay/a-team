@@ -1,9 +1,12 @@
 package com.acme.edu;
 
 import com.jet.edu.server.ChatStorage;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 
+import java.net.Socket;
 import java.sql.SQLException;
 
 /**
@@ -12,15 +15,18 @@ import java.sql.SQLException;
 
 public class StorageTest {
 
+    @Before
+    public void before(){
+
+    }
+
+    @After
+    public void after(){
+
+    }
+
     @Test
     public void testUser(){
-        ChatStorage storage = new ChatStorage();
-        try {
-            storage.connect();
-            storage.addUser("Admin");
-            storage.disconnect();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+
     }
 }

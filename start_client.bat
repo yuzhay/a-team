@@ -1,5 +1,5 @@
 cd target/classes
-java com/jet/edu/ClientApp
+java -classpath . com/jet/edu/ClientApp
 cd ../..
 
 pause
