@@ -1,5 +1,6 @@
 package com.jet.edu;
 
+import com.jet.edu.client.ChatException;
 import com.jet.edu.client.Connector;
 import org.json.JSONObject;
 import org.junit.Assert;
@@ -18,47 +19,46 @@ import java.net.Socket;
  */
 public class ConnectorTest {
 
-    private Connector connector;
-    private Socket mockSocket;
-    private BufferedWriter mockBw;
     private BufferedReader mockBr;
-    private InputStream mockInputStream;
-    private OutputStream mockOutputStream;
-    private JSONObject mockJsonObject;
+    private BufferedWriter mockBw;
+    private Field brField;
+    private Field bwField;
 
     @Before
     public void setUpTests() throws Exception{
-        mockSocket = Mockito.mock(Socket.class);
-        //connector = new Connector(mockSocket);
-        mockJsonObject = Mockito.mock(JSONObject.class);
-        mockInputStream = Mockito.mock(InputStream.class);
-        mockOutputStream = Mockito.mock(OutputStream.class);
-        Mockito.when(mockSocket.getOutputStream()).thenReturn(mockOutputStream);
-        Mockito.when(mockSocket.getInputStream()).thenReturn(mockInputStream);
+        mockBr = Mockito.mock(BufferedReader.class);
+        mockBw = Mockito.mock(BufferedWriter.class);
+        brField = Connector.class.getDeclaredField("br");
+        bwField = Connector.class.getDeclaredField("bw");
+        brField.setAccessible(true);
+        bwField.setAccessible(true);
     }
 
     @Test
     public void shouldPrintMessage() throws Exception{
         Connector connector = ObjenesisHelper.newInstance(Connector.class);
-        BufferedReader mockBr = Mockito.mock(BufferedReader.class);
-        BufferedWriter mockBw = Mockito.mock(BufferedWriter.class);
 
-        Mockito.when(mockJsonObject.toString()).thenReturn("{\"key\":\"value\"}");
-
-//        Mockito.when(mockBw.write(mockJsonObject.toString())).then()
-//        Mockito.doNothing().when(mockBw).write(mockJsonObject.toString());
-  //      Mockito.doNothing().when(mockBw).flush();
         Mockito.when(mockBr.ready()).thenReturn(true);
         Mockito.when(mockBr.readLine()).thenReturn("TEST STRING");
-        Field bwField = Connector.class.getDeclaredField("bw");
-        Field brField = Connector.class.getDeclaredField("br");
-        brField.setAccessible(true);
-        bwField.setAccessible(true);
+
 
         brField.set(connector, mockBr);
         bwField.set(connector, mockBw);
 
         Assert.assertEquals("TEST STRING", connector.sendMessage(new JSONObject().put("key", "value")));
+    }
+
+    @Test (expected = ChatException.class)
+    public void shouldThrowChatException() throws Exception{
+        Connector connector = ObjenesisHelper.newInstance(Connector.class);
+
+        Mockito.when(mockBr.ready()).thenReturn(true);
+        Mockito.when(mockBr.readLine()).thenThrow(ChatException.class);
+
+        brField.set(connector, mockBr);
+        bwField.set(connector, mockBw);
+
+        connector.sendMessage(new JSONObject().put("key","value"));
     }
 
 }

@@ -2,8 +2,8 @@
 <!DOCTYPE log SYSTEM "logger.dtd">
 <log>
 <record>
-  <date>2015-11-13T18:23:37</date>
-  <millis>1447428217231</millis>
+  <date>2015-11-14T01:44:30</date>
+  <millis>1447454670788</millis>
   <sequence>0</sequence>
   <logger>System</logger>
   <level>SEVERE</level>
@@ -14,8 +14,8 @@
 java.sql.SQLSyntaxErrorException: Таблица/просмотр 'APP.USERS' не существует.</message>
 </record>
 <record>
-  <date>2015-11-13T18:23:37</date>
-  <millis>1447428217243</millis>
+  <date>2015-11-14T01:44:30</date>
+  <millis>1447454670801</millis>
   <sequence>1</sequence>
   <logger>System</logger>
   <level>SEVERE</level>
@@ -26,8 +26,8 @@ java.sql.SQLSyntaxErrorException: Таблица/просмотр 'APP.USERS' не существует.</m
 java.sql.SQLSyntaxErrorException: Таблица/просмотр 'APP.USERS' не существует.</message>
 </record>
 <record>
-  <date>2015-11-13T18:23:37</date>
-  <millis>1447428217256</millis>
+  <date>2015-11-14T01:44:30</date>
+  <millis>1447454670807</millis>
   <sequence>2</sequence>
   <logger>System</logger>
   <level>SEVERE</level>
