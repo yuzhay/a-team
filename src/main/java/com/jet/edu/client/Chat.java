@@ -62,11 +62,6 @@ public class Chat {
             System.out.println("некорректное сообщение!");
             return;
         }
-
-        /*if (!checkSizeMessage(message) || messageWithCommand.equals(message)) {
-            System.out.println("некорректное сообщение!");
-            return;
-        }*/
         if (messageWithCommand.startsWith(CHID)) {
             if (checkName(message)) {
                 jsonObject.put("cmd", CHID);

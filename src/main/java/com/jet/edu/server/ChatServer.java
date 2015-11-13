@@ -121,7 +121,7 @@ public class ChatServer implements Server {
 
                                 css.switchState(line, clientStream.get(s));
                             } catch (IOException e) {
-                                logger.printWarning(e.toString());
+                                logger.printWarning("IO client", e);
                                 removeClient(s);
                             }
                         }
@@ -140,7 +140,7 @@ public class ChatServer implements Server {
                         osw.flush();
                     } catch (IOException e) {
                         addException(e);
-                        logger.printWarning(e.toString());
+                        logger.printWarning("Send to clients", e);
                     }
                 }
             }

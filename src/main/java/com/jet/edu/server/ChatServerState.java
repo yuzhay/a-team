@@ -111,7 +111,7 @@ public class ChatServerState implements ServerState {
             osw.flush();
             System.out.println("Server answered: '" + json.toString() + "'");
         } catch (IOException e) {
-            logger.printWarning(e.toString());
+            logger.printWarning("Connection lost", e);
             logger.printConsole("Connection closed by peer");
         }
     }
@@ -124,7 +124,7 @@ public class ChatServerState implements ServerState {
             try {
                 c.getOutputStream().write(json.toString());
             } catch (IOException e) {
-                logger.printWarning(e.toString());
+                logger.printWarning("Not send Messaged to sockets", e);
             }
         }
     }

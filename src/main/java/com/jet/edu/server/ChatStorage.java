@@ -1,5 +1,6 @@
 package com.jet.edu.server;
 
+import com.jet.edu.ChatLogger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -11,6 +12,7 @@ import java.sql.*;
 public class ChatStorage implements Storage {
     private final String connString;
     private Connection conn = null;
+    private final ChatLogger logger = new ChatLogger("ChatServer.log");
 
     /**
      * Constructor with provided connection string
@@ -57,11 +59,9 @@ public class ChatStorage implements Storage {
             try {
                 conn.rollback();
             } catch (SQLException e1) {
-                e1.printStackTrace();
-                return 0;
+                logger.printSevere("SQL exception", e1);
             }
-            e.printStackTrace();
-            return 0;
+            logger.printSevere("SQL exception", e);
         }
         return System.currentTimeMillis() / 1000L;
     }
@@ -74,7 +74,7 @@ public class ChatStorage implements Storage {
             iq.setString(2, userName);
             iq.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.printSevere("SQL exception", e);
         }
     }
 
@@ -97,7 +97,7 @@ public class ChatStorage implements Storage {
                 jsonArray.put(jsonObject);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.printSevere("SQL exception", e);
         }
 //        return list;
         return jsonArray;
@@ -117,7 +117,7 @@ public class ChatStorage implements Storage {
             int online = result.getInt("ONLINE");
             return online > 0;
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.printSevere("SQL exception", e);
             return false;
         }
     }
@@ -130,7 +130,7 @@ public class ChatStorage implements Storage {
             iq.setString(1, userName);
             iq.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.printSevere("SQL exception", e);
         }
     }
 
@@ -147,7 +147,7 @@ public class ChatStorage implements Storage {
             iq.setString(1, userName);
             iq.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.printSevere("SQL exception", e);
         }
     }
 
@@ -160,7 +160,7 @@ public class ChatStorage implements Storage {
             try {
                 conn.close();
             } catch (SQLException e) {
-                /*ToDO: log this error*/
+                logger.printSevere("SQL exception", e);
             }
         }
     }
