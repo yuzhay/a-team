@@ -2,7 +2,7 @@ package com.jet.edu.client;
 
 import org.json.JSONObject;
 
-
+import javax.net.ssl.SSLSocketFactory;
 import java.io.*;
 import java.net.Socket;
 
@@ -12,7 +12,7 @@ import java.net.Socket;
  */
 public class Connector {
     private Socket socket;
-    private final String charset = "UTF-8";
+    private final static String charset = "UTF-8";
 
     /**
      * connection open
@@ -22,7 +22,7 @@ public class Connector {
      */
     public Connector(String host, int port) throws ChatException {
         try {
-            socket = new Socket(host, port);
+            socket = SSLSocketFactory.getDefault().createSocket(host, port);
         } catch (IOException e) {
             throw new ChatException("", e);
         }
