@@ -35,7 +35,6 @@ public class HistoryState implements State {
         if (resp.equals(""))
             return;
         JSONObject responceJson = new JSONObject(resp);
-//        System.out.println(connector.sendMessage(jsonObject));
         JSONArray history = responceJson.getJSONArray("history");
         Iterator<Object> jsonObjectIterator = history.iterator();
         while (jsonObjectIterator.hasNext()){

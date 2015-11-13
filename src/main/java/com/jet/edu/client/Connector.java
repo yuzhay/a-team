@@ -12,10 +12,14 @@ import java.net.Socket;
  */
 public class Connector {
     private Socket socket;
+    private BufferedWriter bw;
+    private BufferedReader br;
+
     private final static String charset = "UTF-8";
 
     /**
      * connection open
+     *
      * @param host
      * @param port
      * @throws ChatException
@@ -23,6 +27,9 @@ public class Connector {
     public Connector(String host, int port) throws ChatException {
         try {
             socket = SSLSocketFactory.getDefault().createSocket(host, port);
+            bw = new BufferedWriter(
+                    new OutputStreamWriter(socket.getOutputStream(), charset));
+            br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         } catch (IOException e) {
             throw new ChatException("", e);
         }
@@ -35,19 +42,13 @@ public class Connector {
      * @throws ChatException
      */
     public String sendMessage(JSONObject jsonMessage) throws ChatException {
-        String line;
-        try (BufferedWriter bw = new BufferedWriter(
-                    new OutputStreamWriter(socket.getOutputStream(), charset));
-             InputStreamReader isr = new InputStreamReader(socket.getInputStream());) {
+        try {
             bw.write(jsonMessage.toString() + System.lineSeparator());
             bw.flush();
-
-            BufferedReader br = new BufferedReader(isr);
-            while(!br.ready()){}
-            line = br.readLine();
+            while (!br.ready()) {}
+            return br.readLine();
         } catch (IOException e) {
             throw new ChatException("", e);
         }
-        return line;
     }
 }
