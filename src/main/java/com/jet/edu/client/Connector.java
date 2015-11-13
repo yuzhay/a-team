@@ -2,10 +2,11 @@ package com.jet.edu.client;
 
 import org.json.JSONObject;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Павел on 12.11.2015.
@@ -27,14 +28,9 @@ public class Connector {
         try {
             BufferedWriter bw = new BufferedWriter(
                     new OutputStreamWriter(socket.getOutputStream(), charset));
-//            StringBuilder sb = new StringBuilder();
-//            BufferedReader br = new BufferedReader(
-//                    new InputStreamReader(socket.getInputStream(), charset));
             InputStreamReader isr = new InputStreamReader(socket.getInputStream());
             bw.write(jsonMessage.toString() + System.lineSeparator());
             bw.flush();
-//            return isr.readLine();
-
             while (isr.ready()){
                 sb.append((char)isr.read()+"");
             }

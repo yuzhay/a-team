@@ -3,10 +3,7 @@ package com.jet.edu.server;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Yuriy on 12.11.2015.

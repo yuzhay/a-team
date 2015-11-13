@@ -9,6 +9,7 @@ import java.util.Iterator;
  * Created by Павел on 12.11.2015.
  */
 public class HistoryState implements State {
+
     private JSONObject jsonObject;
     private Connector connector;
 
@@ -17,7 +18,7 @@ public class HistoryState implements State {
         this.connector = connector;
     }
 
-    public void writeToConnector() throws ChatException {
+    public void writerToConnector() throws ChatException {
         String resp = connector.sendMessage(this.jsonObject);
         if (resp.equals(""))
             return;
@@ -31,9 +32,5 @@ public class HistoryState implements State {
             System.out.print(" ,message: "+jsonObject.getString("MESSAGE"));
             System.out.println(", time:" + jsonObject.getString("TIME"));
         }
-
-    }
-
-    public void ReadConnector() {
     }
 }
