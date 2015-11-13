@@ -2,6 +2,7 @@ package com.jet.edu;
 
 import com.jet.edu.server.ChatServer;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -14,10 +15,5 @@ public class ServerTest {
         chatServer = new ChatServer(12345);
     }
 
-    @Test
-    public void shouldServerStartAndStopCorrectly(){
-        chatServer.start();
-        chatServer.stop();
-    }
 }
 
