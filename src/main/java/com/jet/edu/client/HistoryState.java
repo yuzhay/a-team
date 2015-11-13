@@ -13,8 +13,8 @@ import java.util.Iterator;
  */
 public class HistoryState implements State {
 
-    private JSONObject jsonObject;
-    private Connector connector;
+    private final JSONObject jsonObject;
+    private final Connector connector;
 
     /**
      * initialize connection and jsonObject

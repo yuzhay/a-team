@@ -13,8 +13,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+
 
 /**
  * Created by Yuriy on 12.11.2015.
@@ -71,7 +70,6 @@ public class ChatServer implements Server {
                     addClient(client);
                     logger.printConsole("New client connected");
                 } catch (SocketTimeoutException ste) {
-                    /*Do nothing. Time is out. Wait for next client*/
                 } catch (IOException e) {
                     addException(e);
                     logger.printWarning(e.toString());
