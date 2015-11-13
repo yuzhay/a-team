@@ -3,10 +3,7 @@ package com.jet.edu.client;
 import org.json.JSONObject;
 
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.Socket;
 
 /**
@@ -38,18 +35,19 @@ public class Connector {
      * @throws ChatException
      */
     public String sendMessage(JSONObject jsonMessage) throws ChatException {
-        StringBuilder sb = new StringBuilder();
+        String line;
         try (BufferedWriter bw = new BufferedWriter(
                     new OutputStreamWriter(socket.getOutputStream(), charset));
              InputStreamReader isr = new InputStreamReader(socket.getInputStream());) {
             bw.write(jsonMessage.toString() + System.lineSeparator());
             bw.flush();
-            while (isr.ready()){
-                sb.append((char)isr.read()+"");
-            }
+
+            BufferedReader br = new BufferedReader(isr);
+            while(!br.ready()){}
+            line = br.readLine();
         } catch (IOException e) {
             throw new ChatException("", e);
         }
-        return sb.toString();
+        return line;
     }
 }
