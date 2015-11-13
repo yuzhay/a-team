@@ -9,8 +9,8 @@ import org.json.JSONObject;
  * command /chid <name> - register name
  */
 public class RegisterState implements State {
-    private JSONObject jsonObject;
-    private Connector connector;
+    private final JSONObject jsonObject;
+    private final Connector connector;
 
     /**
      * initialize jsonObject and connection

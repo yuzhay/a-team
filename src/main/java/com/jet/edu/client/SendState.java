@@ -9,8 +9,8 @@ import org.json.JSONObject;
  * Command /snd <message> -send message
  */
 public class SendState implements State {
-    private JSONObject jsonObject;
-    private Connector connector;
+    private final JSONObject jsonObject;
+    private final Connector connector;
 
     /**
      * initialize jsonObject and connection

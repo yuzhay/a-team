@@ -7,7 +7,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-
+import javax.net.ssl.SSLSocketFactory;
 import java.net.Socket;
 
 /**
@@ -16,9 +16,11 @@ import java.net.Socket;
  */
 public class Connector {
     private Socket socket;
-    private final String charset = "UTF-8";
     private BufferedWriter bw;
     private BufferedReader br;
+
+    private final static String charset = "UTF-8";
+
     /**
      * connection open
      *
@@ -28,7 +30,7 @@ public class Connector {
      */
     public Connector(String host, int port) throws ChatException {
         try {
-            socket = new Socket(host, port);
+            socket = SSLSocketFactory.getDefault().createSocket(host, port);
             bw = new BufferedWriter(
                     new OutputStreamWriter(socket.getOutputStream(), charset));
             br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -39,7 +41,6 @@ public class Connector {
 
     /**
      * send messages to server
-     *
      * @param jsonMessage
      * @return readed string messages
      * @throws ChatException

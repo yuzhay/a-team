@@ -42,6 +42,7 @@ public class ChatServerState implements ServerState {
             response.put("status", "error");
             response.put("msg", "Unknown command");
             sendResponse(response, osw);
+            logger.printWarning(response.toString());
             return;
         }
 
@@ -50,7 +51,7 @@ public class ChatServerState implements ServerState {
         try {
             storage.connect();
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.printSevere(response.toString());
         }
 
         switch (cmd) {
@@ -59,6 +60,7 @@ public class ChatServerState implements ServerState {
                     response.put("status", "error");
                     response.put("msg", "Can't find 'name' in json");
                     sendResponse(response, osw);
+                    logger.printWarning(response.toString());
                     return;
                 }
                 String name = json.getString("name");
@@ -69,6 +71,7 @@ public class ChatServerState implements ServerState {
                 } else {
                     response.put("status", "Message add failed");
                     sendResponse(response, osw);
+                    logger.printWarning(response.toString());
                 }
                 return;
             case COMMAND_CHID:
@@ -109,7 +112,7 @@ public class ChatServerState implements ServerState {
             try {
                 c.getOutputStream().write(json.toString());
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.printWarning(e.toString());
             }
         }
     }
