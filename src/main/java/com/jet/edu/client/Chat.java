@@ -24,7 +24,7 @@ public class Chat implements State {
 
     public void readConsole() throws ChatException, IOException {
         String message;
-        while (true) {
+        while (scanner.hasNext()) {
             message = scanner.nextLine();
             managerState(message);
         }
@@ -49,7 +49,7 @@ public class Chat implements State {
                 new RegisterState(jsonObject, connector).writeToConnector();
             } else {
                 System.out.println("некорректное имя!");
-                System.in.read();
+                //System.in.read();
             }
         } else if (messageWithCommand.startsWith(HIST)) {
             jsonObject.put("cmd", HIST);
@@ -91,31 +91,7 @@ public class Chat implements State {
 //                    break;
 //
 //            }
-//        String[] mes = messageWithCommand.split(" ");
-//        messageWithCommand = messageWithCommand.substring(messageWithCommand.indexOf(" ") + 1, messageWithCommand.length());
-//        switch (mes[0]) {
-//            case CHID:
-//                if (checkName(messageWithCommand)) {
-//                    jsonObject.put("cmd", CHID);
-//                    jsonObject.put("msg", messageWithCommand);
-//                    new RegisterState(jsonObject, connector).writeToConnector();
-//                }else{
-//                    System.out.println("некорректное имя!");
-//                    System.in.read();
-//                }
-//                break;
-//            case HIST:
-//                jsonObject.put("cmd", HIST);
-//                jsonObject.put("msg", messageWithCommand);
-//                //new HistoryState(jsonObject);
-//                break;
-//            case SND:
-//                jsonObject.put("cmd", SND);
-//                jsonObject.put("msg", messageWithCommand);
-//                //new SendState(jsonObject);
-//                break;
-//            default:
-//        }
+
 
     }
 }
