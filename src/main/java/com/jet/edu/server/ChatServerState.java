@@ -1,5 +1,6 @@
 package com.jet.edu.server;
 
+import com.jet.edu.ChatLogger;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -17,9 +18,11 @@ public class ChatServerState implements ServerState {
 
     private final Storage storage = new ChatStorage();
     private Hashtable<Socket, ClientIO> clients;
+    private ChatLogger logger;
 
-    public ChatServerState(Hashtable<Socket, ClientIO> clients) {
+    public ChatServerState(Hashtable<Socket, ClientIO> clients, ChatLogger logger) {
         this.clients = clients;
+        this.logger = logger;
     }
 
     public void switchState(String str, ClientIO client) {
@@ -39,6 +42,7 @@ public class ChatServerState implements ServerState {
             response.put("status", "error");
             response.put("msg", "Unknown command");
             sendResponse(response, osw);
+            logger.printWarning(response.toString());
             return;
         }
 
@@ -47,7 +51,7 @@ public class ChatServerState implements ServerState {
         try {
             storage.connect();
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.printSevere(response.toString());
         }
 
         switch (cmd) {
@@ -56,6 +60,7 @@ public class ChatServerState implements ServerState {
                     response.put("status", "error");
                     response.put("msg", "Can't find 'name' in json");
                     sendResponse(response, osw);
+                    logger.printWarning(response.toString());
                     return;
                 }
                 String name = json.getString("name");
@@ -66,6 +71,7 @@ public class ChatServerState implements ServerState {
                 } else {
                     response.put("status", "Message add failed");
                     sendResponse(response, osw);
+                    logger.printWarning(response.toString());
                 }
                 return;
             case COMMAND_CHID:
@@ -89,10 +95,12 @@ public class ChatServerState implements ServerState {
 
     private void sendResponse(JSONObject json, OutputStreamWriter osw) {
         try {
-            osw.write(json.toString());
+            osw.write(json.toString() + System.lineSeparator());
             osw.flush();
+            System.out.println("Server answered: '" + json.toString() + "'");
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.printWarning(e.toString());
+            logger.printConsole("Connection closed by peer");
         }
     }
 
@@ -104,7 +112,7 @@ public class ChatServerState implements ServerState {
             try {
                 c.getOutputStream().write(json.toString());
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.printWarning(e.toString());
             }
         }
     }

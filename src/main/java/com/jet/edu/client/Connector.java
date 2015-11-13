@@ -2,6 +2,7 @@ package com.jet.edu.client;
 
 import org.json.JSONObject;
 
+
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -9,12 +10,19 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 
 /**
- * Created by Павел on 12.11.2015.
+ * Connected with server
+ * read and write messages from server
  */
 public class Connector {
-    Socket socket;
-    private String charset = "UTF-8";
+    private Socket socket;
+    private final String charset = "UTF-8";
 
+    /**
+     * connection open
+     * @param host
+     * @param port
+     * @throws ChatException
+     */
     public Connector(String host, int port) throws ChatException {
         try {
             socket = new Socket(host, port);
@@ -23,12 +31,17 @@ public class Connector {
         }
     }
 
+    /**
+     * send messages to server
+     * @param jsonMessage
+     * @return readed string messages
+     * @throws ChatException
+     */
     public String sendMessage(JSONObject jsonMessage) throws ChatException {
         StringBuilder sb = new StringBuilder();
-        try {
-            BufferedWriter bw = new BufferedWriter(
+        try (BufferedWriter bw = new BufferedWriter(
                     new OutputStreamWriter(socket.getOutputStream(), charset));
-            InputStreamReader isr = new InputStreamReader(socket.getInputStream());
+             InputStreamReader isr = new InputStreamReader(socket.getInputStream());) {
             bw.write(jsonMessage.toString() + System.lineSeparator());
             bw.flush();
             while (isr.ready()){
