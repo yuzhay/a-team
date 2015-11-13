@@ -70,6 +70,7 @@ public class ChatServer implements Server {
                     addClient(client);
                     logger.printConsole("New client connected");
                 } catch (SocketTimeoutException ste) {
+
                 } catch (IOException e) {
                     addException(e);
                     logger.printWarning(e.toString());
