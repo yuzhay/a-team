@@ -25,9 +25,26 @@ public class ChatServer implements Server {
     private Accepter accepter = new Accepter();
     //endregion
 
+    /**
+     * Start ChatServer
+     */
+    public void start() {
+        try {
+            serverThread = new Thread(accepter);
+            serverThread.start();
+        } catch (RuntimeException ex) {
+            /*TODO: handle*/
+        }
+    }
+
+    /**
+     * Stop ChatServer
+     */
+    public void stop() {
+        serverThread.interrupt();
+    }
+
     //region Accepter
-
-
     private class Accepter implements Runnable {
         //region private fields
         private List<IOException> exceptionsList = new ArrayList<>();
@@ -122,8 +139,6 @@ public class ChatServer implements Server {
         }
     }
 
-
-    //endregion
     //endregion
 
     /**
@@ -139,26 +154,8 @@ public class ChatServer implements Server {
         }
     }
 
-    /**
-     * Start ChatServer
-     */
-    public void start() {
-        try {
-            serverThread = new Thread(accepter);
-            serverThread.start();
-        } catch (RuntimeException ex) {
-            /*TODO: handle*/
-        }
-    }
-
-    /**
-     * Stop ChatServer
-     */
-    public void stop() {
-        serverThread.interrupt();
-    }
+    //endregion
 }
-
 
 class ClientIO {
     private BufferedReader br;
@@ -168,18 +165,29 @@ class ClientIO {
 
     /**
      * Default ClientIO constructor
-     * @param br
-     * @param sw
+     *
+     * @param br socket input stream
+     * @param sw socket output stream
      */
     public ClientIO(BufferedReader br, OutputStreamWriter sw) {
         this.br = br;
         this.sw = sw;
     }
 
+    /**
+     * Get socket input stream
+     *
+     * @return input stream
+     */
     public BufferedReader getInputStream() {
         return this.br;
     }
 
+    /**
+     * Get socket output stream
+     *
+     * @return output stream
+     */
     public OutputStreamWriter getOutputStream() {
         return this.sw;
     }

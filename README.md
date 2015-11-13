@@ -1,6 +1,6 @@
 # A-Team
 
-Run:
+## Run on windows:
 1. Start Derby server %JAVS_HOME%\db\bin\startNetworkServer.bat
 2. Run create_schema.sql
 3. Run populate_data.sql

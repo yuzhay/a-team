@@ -1,4 +1,4 @@
-package com.acme.edu;
+package com.jet.edu;
 
 import com.jet.edu.server.ChatStorage;
 import org.junit.After;
