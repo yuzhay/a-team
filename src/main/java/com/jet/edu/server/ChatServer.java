@@ -1,6 +1,7 @@
 package com.jet.edu.server;
 
 import com.jet.edu.ChatLogger;
+import com.jet.edu.client.Client;
 import org.json.JSONObject;
 
 import java.io.*;
@@ -43,19 +44,34 @@ public class ChatServer implements Server {
             while (!Thread.interrupted()) {
                 try {
                     Socket client = socket.accept();
-                    clientStream.put(client,
-                            new ClientIO(
-                                    new BufferedReader(
-                                            new InputStreamReader(client.getInputStream(), charset)
-                                    ),
-                                    new OutputStreamWriter(client.getOutputStream(), charset)));
-
+                    addClient(client);
                     System.out.println("New client connected");
                 } catch (SocketTimeoutException ste) {
                     /*Do nothing. Time is out. Wait for next client*/
                 } catch (IOException e) {
                     exceptionsList.add(e);
                 }
+            }
+        }
+
+        private void addClient(Socket sock) {
+            synchronized (clientStream) {
+                try {
+                    clientStream.put(sock,
+                            new ClientIO(
+                                    new BufferedReader(
+                                            new InputStreamReader(sock.getInputStream(), charset)
+                                    ),
+                                    new OutputStreamWriter(sock.getOutputStream(), charset)));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        private void removeClient(Socket sock) {
+            synchronized (clientStream) {
+                clientStream.remove(sock);
             }
         }
 
@@ -79,7 +95,7 @@ public class ChatServer implements Server {
                                 css.switchState(line, clientStream.get(s));
                             } catch (IOException e) {
                                 e.printStackTrace();
-                                clientStream.remove(s);
+                                removeClient(s);
                             }
                         }
                     }
