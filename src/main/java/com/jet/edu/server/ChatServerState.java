@@ -92,7 +92,7 @@ public class ChatServerState implements ServerState {
 
     private void sendResponse(JSONObject json, OutputStreamWriter osw) {
         try {
-            osw.write(json.toString());
+            osw.write(json.toString() + System.lineSeparator());
             osw.flush();
             System.out.println("Server answered: '" + json.toString() + "'");
         } catch (IOException e) {
