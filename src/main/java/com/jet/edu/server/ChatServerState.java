@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Hashtable;
 
 /**
@@ -17,10 +18,10 @@ import java.util.Hashtable;
 public class ChatServerState implements ServerState {
 
     private final Storage storage = new ChatStorage();
-    private Hashtable<Socket, ClientIO> clients;
+    private HashMap<Socket, ClientIO> clients;
     private ChatLogger logger;
 
-    public ChatServerState(Hashtable<Socket, ClientIO> clients, ChatLogger logger) {
+    public ChatServerState(HashMap<Socket, ClientIO> clients, ChatLogger logger) {
         this.clients = clients;
         this.logger = logger;
     }
@@ -109,7 +110,7 @@ public class ChatServerState implements ServerState {
         try {
             osw.write(json.toString() + System.lineSeparator());
             osw.flush();
-            System.out.println("Server answered: '" + json.toString() + "'");
+            logger.printConsole("Server to one: '" + json.toString() + "'");
         } catch (IOException e) {
             logger.printWarning("Connection lost", e);
             logger.printConsole("Connection closed by peer");
@@ -123,6 +124,8 @@ public class ChatServerState implements ServerState {
             }
             try {
                 c.getOutputStream().write(json.toString());
+                c.getOutputStream().flush();
+                logger.printConsole("Server To all:");
             } catch (IOException e) {
                 logger.printWarning("Not send Messaged to sockets", e);
             }

@@ -8,6 +8,7 @@ import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -49,7 +50,7 @@ public class ChatServer implements Server {
     private class Accepter implements Runnable {
         //region private fields
         private List<IOException> exceptionsList = new ArrayList<>();
-        private Hashtable<Socket, ClientIO> clientStream = new Hashtable<>();
+        private HashMap<Socket, ClientIO> clientStream = new HashMap<>();
         //endregion
 
         //region public methods
