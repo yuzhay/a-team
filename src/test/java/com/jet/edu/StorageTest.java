@@ -26,9 +26,4 @@ public class StorageTest {
 
     }
 
-    @Test
-    @Ignore
-    public void testUser(){
-
-    }
 }

@@ -15,11 +15,5 @@ public class ServerTest {
         chatServer = new ChatServer(12345);
     }
 
-    @Test
-    @Ignore
-    public void shouldServerStartAndStopCorrectly(){
-        chatServer.start();
-        chatServer.stop();
-    }
 }
 

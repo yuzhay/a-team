@@ -32,19 +32,6 @@ public class TestChatStorage {
         chatStorage.connect();
     }
 
-    @Test
-    @Ignore
-    public void shouldDisconnectFromDB() throws Exception {
-        chatStorage.connect();
-        chatStorage.disconnect();
-    }
-
-    @Test
-    @Ignore
-    public void shouldCorrectlyAddUsers() throws Exception {
-        chatStorage.connect();
-        chatStorage.addUser("USER1");
-    }
 
     @Test
     public void shouldCorrectlyReturnOnlineStatus() throws Exception {
@@ -60,14 +47,6 @@ public class TestChatStorage {
         Assert.assertFalse(chatStorage.isUserOnline("Yura"));
     }
 
-
-    @Test
-    @Ignore
-    public void addMessage() throws Exception {
-        chatStorage.connect();
-        chatStorage.addMessage("Yura", "Hello!");
-    }
-
     @Test
     @Ignore
     public void shouldCorrectlyGetHistory() throws Exception {
@@ -80,10 +59,4 @@ public class TestChatStorage {
         Assert.assertEquals(jsonArray.getJSONObject(0).getString("NICKNAME"), "Yura");
     }
 
-    @Test
-    @Ignore
-    public void shouldCorrectly() throws Exception {
-        chatStorage.connect();
-        chatStorage.changeRoom("SuperRoom", "Yura");
-    }
 }
