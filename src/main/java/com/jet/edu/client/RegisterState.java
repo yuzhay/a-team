@@ -31,7 +31,7 @@ public class RegisterState implements State {
     public boolean writerToConnector() throws ChatException {
         String fromConnector = connector.sendMessage(jsonObject);
         if (fromConnector != null) {
-           return checkMessageFromServer(fromConnector);
+            return checkMessageFromServer(fromConnector);
         } else {
             println("Нет соединения");
             return false;
@@ -40,10 +40,10 @@ public class RegisterState implements State {
 
     private boolean checkMessageFromServer(String msgFromServer) {
         JSONObject messageFromServer = new JSONObject(msgFromServer);
-        String message = messageFromServer.get("msg").toString();
-        if (message.equals("OK")){
+        String message = messageFromServer.get("status").toString();
+        if (message.equals("ok")) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }

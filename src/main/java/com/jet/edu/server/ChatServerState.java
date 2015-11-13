@@ -64,12 +64,15 @@ public class ChatServerState implements ServerState {
                     return;
                 }
                 String name = json.getString("name");
-                boolean added = storage.addMessage(name, msg);
-                if (added) {
+                long timestamp = storage.addMessage(name, msg);
+                if (timestamp > 0) {
                     response.put("msg", msg);
+                    response.put("name", name);
+                    response.put("time", timestamp);
                     sendResponseToAll(response, osw);
                 } else {
-                    response.put("status", "Message add failed");
+                    response.put("status", "error");
+                    response.put("msg", "Can't add message");
                     sendResponse(response, osw);
                     logger.printWarning(response.toString());
                 }
