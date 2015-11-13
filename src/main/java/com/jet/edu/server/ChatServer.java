@@ -139,7 +139,8 @@ public class ChatServer implements Server {
                         osw.write(message);
                         osw.flush();
                     } catch (IOException e) {
-
+                        addException(e);
+                        logger.printWarning(e.toString());
                     }
                 }
             }
