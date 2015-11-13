@@ -45,8 +45,9 @@ public class HistoryState implements State {
             println(
                     String.format("%s[%s]: %s",
                             jsonObject.getString("NICKNAME"),
-                            jsonObject.getString("MESSAGE"),
-                            jsonObject.getString("TIME")
+                            jsonObject.getString("TIME"),
+                            jsonObject.getString("MESSAGE")
+
                     ));
 
         }

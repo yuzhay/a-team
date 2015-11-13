@@ -73,6 +73,11 @@ public class ChatServerState implements ServerState {
                     response.put("msg", msg);
                     response.put("name", name);
                     response.put("time", timestamp);
+
+                    JSONObject ownerResponse = new JSONObject(str);
+                    ownerResponse.put("status", "ok");
+                    sendResponse(ownerResponse, osw);
+
                     sendResponseToAll(response, osw);
                 } else {
                     response.put("status", "error");
@@ -113,7 +118,7 @@ public class ChatServerState implements ServerState {
 
     private void sendResponseToAll(JSONObject json, OutputStreamWriter osw) {
         for (ClientIO c : clients.values()) {
-            if (c.getOutputStream() == osw) {
+            if (c.getOutputStream().equals(osw)) {
                 continue;
             }
             try {

@@ -17,6 +17,7 @@ public class ClientApp {
 
     public static void main(String[] args) throws ChatException, IOException {
         Chat chat = new Chat(new Factory(), new Connector("127.0.0.1", 12348));
+        System.out.println("Chat client started");
         chat.readConsole();
     }
 }
