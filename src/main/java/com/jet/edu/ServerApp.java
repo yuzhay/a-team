@@ -1,14 +1,15 @@
 package com.jet.edu;
 
-        import com.jet.edu.server.ChatServer;
+import com.jet.edu.server.ChatServer;
 
 /**
  * * Project04
  */
 public class ServerApp {
     public static void main(String[] args) {
-        ChatServer server = new ChatServer(12348);
+        int port = 12348;
+        ChatServer server = new ChatServer(port);
         server.start();
-        System.out.println("Server started!");
+        System.out.println("Chat Server started on localhost:" + port +" successful");
     }
 }

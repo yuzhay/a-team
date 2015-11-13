@@ -1,16 +1,15 @@
 package com.jet.edu.client;
 
-import java.io.IOException;
-
 /**
- * Created by Павел on 12.11.2015.
+ * ChatException catch exceptions
  */
 public class ChatException extends Exception {
+    /**
+     * catch chatExceptions
+     * @param message
+     * @param cause
+     */
     public ChatException(String message, Throwable cause) {
         super(message, cause);
-    }
-
-    public ChatException(IOException e) {
-
     }
 }

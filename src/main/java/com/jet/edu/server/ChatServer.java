@@ -1,5 +1,7 @@
 package com.jet.edu.server;
 
+import com.jet.edu.ChatLogger;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -17,7 +19,8 @@ import java.util.List;
  */
 public class ChatServer implements Server {
     //region private fields
-    private static final Charset charset = Charset.forName("utf-8");
+    private final Charset charset = Charset.forName("utf-8");
+    private final ChatLogger logger = new ChatLogger("ChatServer.log");
     private ServerSocket socket;
     private Thread serverThread;
     private Accepter accepter = new Accepter();
@@ -32,7 +35,7 @@ public class ChatServer implements Server {
             serverThread = new Thread(accepter);
             serverThread.start();
         } catch (RuntimeException ex) {
-            /*TODO: handle*/
+            logger.printSevere("Server can't start on localhost");
         }
     }
 
@@ -42,6 +45,7 @@ public class ChatServer implements Server {
     @Override
     public void stop() {
         serverThread.interrupt();
+        logger.printConsole("Server stopped");
     }
 
     //region Accepter
@@ -52,22 +56,24 @@ public class ChatServer implements Server {
         //endregion
 
         //region public methods
+
         /**
          * Socket accept thread runner
          */
         @Override
         public void run() {
             new Thread(new OneThreadWorker()).start();
-
             while (!Thread.interrupted()) {
                 try {
                     Socket client = socket.accept();
                     addClient(client);
-                    System.out.println("New client connected");
+                    logger.printConsole("New client connected");
                 } catch (SocketTimeoutException ste) {
                     /*Do nothing. Time is out. Wait for next client*/
                 } catch (IOException e) {
-                    exceptionsList.add(e);
+                    addException(e);
+                    logger.printWarning(e.toString());
+                    logger.printConsole("Client socket IO error. See log.");
                 }
             }
         }
@@ -82,7 +88,8 @@ public class ChatServer implements Server {
                                     ),
                                     new OutputStreamWriter(sock.getOutputStream(), charset)));
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    addException(e);
+                    logger.printSevere("Server can't start on localhost:");
                 }
             }
         }
@@ -91,12 +98,13 @@ public class ChatServer implements Server {
             synchronized (clientStream) {
                 clientStream.remove(sock);
             }
+            logger.printConsole("Client disconnected: " + sock);
         }
 
         private class OneThreadWorker implements Runnable {
             @Override
             public void run() {
-                ChatServerState css = new ChatServerState(clientStream);
+                ChatServerState css = new ChatServerState(clientStream, logger);
                 while (true) {
                     synchronized (clientStream) {
                         for (Socket s : clientStream.keySet()) {
@@ -112,7 +120,6 @@ public class ChatServer implements Server {
 
                                 css.switchState(line, clientStream.get(s));
                             } catch (IOException e) {
-                                e.printStackTrace();
                                 removeClient(s);
                             }
                         }
@@ -135,6 +142,12 @@ public class ChatServer implements Server {
                 }
             }
         }
+
+        private void addException(IOException ex) {
+            synchronized (exceptionsList) {
+                exceptionsList.add(ex);
+            }
+        }
     }
 
     //endregion
@@ -148,7 +161,7 @@ public class ChatServer implements Server {
         try {
             socket = new ServerSocket(port);
         } catch (IOException e) {
-            /*TODO: handle*/
+            logger.printSevere("Server can't bind localhost:" + port);
         }
     }
 

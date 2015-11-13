@@ -1,5 +1,6 @@
 package com.jet.edu.server;
 
+import com.jet.edu.ChatLogger;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -17,9 +18,11 @@ public class ChatServerState implements ServerState {
 
     private final Storage storage = new ChatStorage();
     private Hashtable<Socket, ClientIO> clients;
+    private ChatLogger logger;
 
-    public ChatServerState(Hashtable<Socket, ClientIO> clients) {
+    public ChatServerState(Hashtable<Socket, ClientIO> clients, ChatLogger logger) {
         this.clients = clients;
+        this.logger = logger;
     }
 
     public void switchState(String str, ClientIO client) {
@@ -52,13 +55,19 @@ public class ChatServerState implements ServerState {
 
         switch (cmd) {
             case COMMAND_SND:
+                if (!json.has("name")) {
+                    response.put("status", "error");
+                    response.put("msg", "Can't find 'name' in json");
+                    sendResponse(response, osw);
+                    return;
+                }
                 String name = json.getString("name");
                 boolean added = storage.addMessage(name, msg);
-                if(added) {
+                if (added) {
                     response.put("msg", msg);
                     sendResponseToAll(response, osw);
-                }else{
-                    response.put("status", "error");
+                } else {
+                    response.put("status", "Message add failed");
                     sendResponse(response, osw);
                 }
                 return;
@@ -83,10 +92,12 @@ public class ChatServerState implements ServerState {
 
     private void sendResponse(JSONObject json, OutputStreamWriter osw) {
         try {
-            osw.write(json.toString());
+            osw.write(json.toString() + System.lineSeparator());
             osw.flush();
+            System.out.println("Server answered: '" + json.toString() + "'");
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.printWarning(e.toString());
+            logger.printConsole("Connection closed by peer");
         }
     }
 

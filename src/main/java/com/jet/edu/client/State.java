@@ -1,7 +1,10 @@
 package com.jet.edu.client;
 
 /**
- * Created by Yuriy on 12.11.2015.
+ * State for different commands
  */
 public interface State {
+    default void println(String message) {
+        System.out.println(message);
+    }
 }
