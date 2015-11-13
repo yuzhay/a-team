@@ -49,8 +49,8 @@ public class ChatLogger {
      * prints SERVE message
      * @param message - message
      */
-    public void printSevere(String message){
-        logger.log(Level.SEVERE,message);
+    public void printSevere(String message, Throwable e){
+        logger.log(Level.SEVERE,message + System.lineSeparator()+ e);
     }
 
     public void printConsole(String message){
