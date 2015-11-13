@@ -8,5 +8,5 @@ public interface ServerState {
     String COMMAND_SND = "/snd";
     String COMMAND_CHID = "/chid";
 
-    String switchState(String str);
+    void switchState(String str, ClientIO client);
 }

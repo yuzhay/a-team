@@ -2,6 +2,7 @@ package com.acme.edu;
 
 import com.jet.edu.server.ChatServer;
 import org.fest.assertions.Assert;
+import org.json.JSONObject;
 import org.junit.*;
 
 import java.io.*;
@@ -28,8 +29,7 @@ public class ChatServerTest {
         server.stop();
     }
 
-    @Test(timeout = 2000)
-    @Ignore
+    @Test(timeout = 20000)
     public void shouldServerResponseOnChidCommand() throws IOException {
         Socket s = new Socket("localhost", port);
         OutputStreamWriter sw = new OutputStreamWriter(s.getOutputStream());
@@ -37,13 +37,13 @@ public class ChatServerTest {
         BufferedReader br = new BufferedReader(sr);
 
         String given1 = "{'cmd':'/chid','msg':'user'}" + System.lineSeparator();
-        String expected1 = "[PUT_EXPECTED_VALUE_HERE]";
+        String expected1 = "ok";
 
         sw.write(given1);
         sw.flush();
         String actual1 = br.readLine();
-
+        JSONObject json = new JSONObject(actual1);
         s.close();
-        org.junit.Assert.assertEquals(expected1, actual1);
+        org.junit.Assert.assertEquals(expected1, json.getString("status"));
     }
 }

@@ -9,24 +9,37 @@ import java.io.InputStreamReader;
 import java.util.Scanner;
 
 /**
- * Created by Yuriy on 12.11.2015.
+ * Class Chat read from console
+ * and send readed messages
  */
 public class Chat implements State {
     private static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-    private Connector connector;
+    private final Connector connector;
     public static final String CHID = "/chid";
     public static final String HIST = "/hist";
     public static final String SND = "/snd";
 
     Scanner scanner = new Scanner(System.in);
 
+    /**
+     * initialize port and host
+     * and connection
+     * @param host
+     * @param port
+     * @throws ChatException
+     */
     public Chat(String host, int port) throws ChatException {
         connector = new Connector(host, port);
     }
 
-    public void readConsole() throws ChatException, IOException {
+    /**
+     * read from console messages
+     * @throws ChatException
+     * @throws IOException
+     */
+    public void readConsole() throws ChatException {
         String message;
-        while (reader.readLine()!= null) {
+        while (scanner.hasNext()) {
             message = scanner.nextLine();
             managerState(message);
         }
@@ -40,7 +53,7 @@ public class Chat implements State {
         return (name.length() >0 && name.length() < 50 && !name.contains(" "));
     }
 
-    private void managerState(String messageWithCommand) throws ChatException, IOException {
+    private void managerState(String messageWithCommand) throws ChatException {
         JSONObject jsonObject = new JSONObject();
 //<<<<<<< HEAD
 //        String[] mes = message.split(" ");

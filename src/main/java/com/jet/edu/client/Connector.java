@@ -8,7 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Павел on 12.11.2015.
+ * Connected with server
+ * read and write messages from server
  */
 public class Connector {
     Socket socket;
@@ -16,6 +17,12 @@ public class Connector {
     private BufferedWriter bw;
     private BufferedReader br;
 
+    /**
+     * connection open
+     * @param host
+     * @param port
+     * @throws ChatException
+     */
     public Connector(String host, int port) throws ChatException {
         try {
             socket = new Socket(host, port);
@@ -28,6 +35,12 @@ public class Connector {
         }
     }
 
+    /**
+     * send messages to server
+     * @param jsonMessage
+     * @return readed string messages
+     * @throws ChatException
+     */
     public String sendMessage(JSONObject jsonMessage) throws ChatException {
         StringBuilder sb = new StringBuilder();
         try {
@@ -49,16 +62,5 @@ public class Connector {
             throw new ChatException("", e);
         }
         return sb.toString();
-    }
-
-    public void listenMessage() throws ChatException {
-        try {
-            while(br.readLine() != null)
-            {
-                System.out.print(br.readLine());
-            }
-        } catch (IOException e) {
-            throw new ChatException("", e);
-        }
     }
 }

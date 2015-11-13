@@ -11,7 +11,7 @@ import java.io.IOException;
  */
 public class ClientApp {
     public static void main(String[] args) throws ChatException, IOException {
-        Chat chat = new Chat("localhost", 12345);
+        Chat chat = new Chat("localhost", 12348);
         chat.readConsole();
     }
 }

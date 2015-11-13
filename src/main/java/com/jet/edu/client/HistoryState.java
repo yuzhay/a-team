@@ -6,7 +6,10 @@ import org.json.JSONObject;
 import java.util.Iterator;
 
 /**
- * Created by Павел on 12.11.2015.
+ * HistoryState send command /hist to server
+ * read answer from server
+ * print to console answer
+ * Command /hist -  wait history of messaged
  */
 public class HistoryState implements State {
     private JSONObject jsonObject;
@@ -17,6 +20,10 @@ public class HistoryState implements State {
         this.connector = connector;
     }
 
+    /**
+     * write messages to get history to Connector
+     * @throws ChatException
+     */
     public void writeToConnector() throws ChatException {
         String resp = connector.sendMessage(this.jsonObject);
         if (resp.equals(""))
@@ -34,6 +41,9 @@ public class HistoryState implements State {
 
     }
 
-    public void ReadConnector() {
-    }
+    /**
+     * read messages
+     */
+//    public void ReadConnector() {
+//    }
 }

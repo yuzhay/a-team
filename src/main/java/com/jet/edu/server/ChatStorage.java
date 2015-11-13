@@ -23,16 +23,33 @@ public class ChatStorage implements Storage {
         this.connString = "jdbc:derby://localhost:1527/chat";
     }
 
-    public void addMessage(String name, String msg) {
-        String query = "INSERT INTO APP.MESSAGES (USER_ID,MESSAGE) VALUES((SELECT id FROM USERS WHERE name=?), ?)";
-        try (
-                PreparedStatement iq = conn.prepareStatement(query)) {
+    public boolean addMessage(String name, String msg) {
+        String query1 = "(SELECT id FROM USERS WHERE name=?";
+        String query2 = "INSERT INTO APP.MESSAGES (USER_ID,MESSAGE) VALUES(?, ?)";
+        try {
+            conn.setAutoCommit(false);
+            PreparedStatement iq = conn.prepareStatement(query1);
             iq.setString(1, name);
-            iq.setString(2, msg);
+            ResultSet result = iq.executeQuery();
+            result.next();
+            int uid = result.getInt(1);
+
+            iq = conn.prepareStatement(query2);
+            iq.setInt(1, uid);
             iq.executeUpdate();
+
+            conn.commit();
         } catch (SQLException e) {
+            try {
+                conn.rollback();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+                return false;
+            }
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
     public void changeRoom(String roomName, String userName){
@@ -48,18 +65,17 @@ public class ChatStorage implements Storage {
 
     public JSONArray getHistory() {
         String query = "SELECT USERS.NAME, MESSAGE, TIME FROM APP.MESSAGES INNER JOIN APP.USERS ON USER_ID = USERS.ID";
-//        List<JSONObject> list = new ArrayList<>();
         JSONArray jsonArray = new JSONArray();
-        try (PreparedStatement iq = conn.prepareStatement(query)){
+        try (PreparedStatement iq = conn.prepareStatement(query)) {
             ResultSet result = iq.executeQuery();
-            while (result.next()){
+            while (result.next()) {
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put("MESSAGE",result.getString("MESSAGE"));
-                jsonObject.put("TIME",result.getTimestamp("TIME").toString());
-                jsonObject.put("NICKNAME",result.getString("NAME"));
+                jsonObject.put("MESSAGE", result.getString("MESSAGE"));
+                jsonObject.put("TIME", result.getTimestamp("TIME").toString());
+                jsonObject.put("NICKNAME", result.getString("NAME"));
                 jsonArray.put(jsonObject);
             }
-        } catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 //        return list;
@@ -71,7 +87,11 @@ public class ChatStorage implements Storage {
         try (PreparedStatement iq = conn.prepareStatement(query)) {
             iq.setString(1, userName);
             ResultSet result = iq.executeQuery();
-            result.next();
+
+            if(result.next() == false){
+                return false;
+            }
+
             int online = result.getInt("ONLINE");
             return online > 0;
         } catch (SQLException e) {
@@ -84,7 +104,7 @@ public class ChatStorage implements Storage {
         String query = "UPDATE APP.USERS set ONLINE = 0 WHERE name = ?";
         try (
                 PreparedStatement iq = conn.prepareStatement(query)) {
-            iq.setString(1,userName);
+            iq.setString(1, userName);
             iq.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
