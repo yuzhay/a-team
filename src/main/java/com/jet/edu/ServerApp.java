@@ -10,6 +10,6 @@ public class ServerApp {
         int port = 12348;
         ChatServer server = new ChatServer(port);
         server.start();
-        System.out.println("Chat Server started on localhost:" + port +"successful");
+        System.out.println("Chat Server started on localhost:" + port +" successful");
     }
 }

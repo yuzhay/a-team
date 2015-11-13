@@ -1,5 +1,6 @@
 package com.jet.edu.server;
 
+import com.jet.edu.ChatLogger;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -17,9 +18,11 @@ public class ChatServerState implements ServerState {
 
     private final Storage storage = new ChatStorage();
     private Hashtable<Socket, ClientIO> clients;
+    private ChatLogger logger;
 
-    public ChatServerState(Hashtable<Socket, ClientIO> clients) {
+    public ChatServerState(Hashtable<Socket, ClientIO> clients, ChatLogger logger) {
         this.clients = clients;
+        this.logger = logger;
     }
 
     public void switchState(String str, ClientIO client) {
@@ -91,8 +94,10 @@ public class ChatServerState implements ServerState {
         try {
             osw.write(json.toString());
             osw.flush();
+            System.out.println("Server answered: '" + json.toString() + "'");
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.printWarning(e.toString());
+            logger.printConsole("Connection closed by peer");
         }
     }
 
