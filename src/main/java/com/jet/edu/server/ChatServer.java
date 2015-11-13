@@ -37,6 +37,10 @@ public class ChatServer implements Server {
         //endregion
 
         //region public methods
+
+        /**
+         * Socket accept thread runner
+         */
         @Override
         public void run() {
             new Thread(new OneThreadWorker()).start();
@@ -123,6 +127,11 @@ public class ChatServer implements Server {
     //endregion
     //endregion
 
+    /**
+     * Default ChatServer constructor
+     *
+     * @param port set TCP port
+     */
     public ChatServer(int port) {
         try {
             socket = new ServerSocket(port);
@@ -131,6 +140,9 @@ public class ChatServer implements Server {
         }
     }
 
+    /**
+     * Start ChatServer
+     */
     public void start() {
         try {
             serverThread = new Thread(accepter);
@@ -140,6 +152,9 @@ public class ChatServer implements Server {
         }
     }
 
+    /**
+     * Stop ChatServer
+     */
     public void stop() {
         serverThread.interrupt();
     }
@@ -150,6 +165,13 @@ class ClientIO {
     private BufferedReader br;
     private OutputStreamWriter sw;
 
+    //region public methods
+
+    /**
+     * Default ClientIO constructor
+     * @param br
+     * @param sw
+     */
     public ClientIO(BufferedReader br, OutputStreamWriter sw) {
         this.br = br;
         this.sw = sw;
@@ -162,4 +184,6 @@ class ClientIO {
     public OutputStreamWriter getOutputStream() {
         return this.sw;
     }
+
+    //endregion
 }
