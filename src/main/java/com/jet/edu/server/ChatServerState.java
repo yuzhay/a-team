@@ -74,7 +74,7 @@ public class ChatServerState implements ServerState {
                     response.put("name", name);
                     response.put("time", timestamp);
 
-                    JSONObject ownerResponse = new JSONObject(str);
+                    JSONObject ownerResponse = new JSONObject();
                     ownerResponse.put("status", "ok");
                     sendResponse(ownerResponse, osw);
 
