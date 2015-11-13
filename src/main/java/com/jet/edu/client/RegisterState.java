@@ -15,20 +15,17 @@ public class RegisterState implements State {
         this.connector = connector;
     }
 
-    public void writeToConnector() throws ChatException {
-        System.out.println(connector.sendMessage(jsonObject));
-    }
 
-//    public void writerToConector() throws ChatException {
-//        String fromConnector = connector.sendMessage(jsonObject);
-//        if (fromConnector != null) {
-//            JSONObject messageFromServer = new JSONObject(fromConnector);
-//            String message = messageFromServer.get("msg").toString();
-//            System.out.println(message);
-//        } else{
-//            System.out.println(Constants.NO_CONNECTION);
-//        }
-//    }
+    public void writeToConnector() throws ChatException {
+        String fromConnector = connector.sendMessage(jsonObject);
+        if (fromConnector != null) {
+            JSONObject messageFromServer = new JSONObject(fromConnector);
+            String message = messageFromServer.get("msg").toString();
+            System.out.println(message);
+        } else{
+            System.out.println(Constants.NO_CONNECTION);
+        }
+    }
 
 
     public void ReadConnector() {
