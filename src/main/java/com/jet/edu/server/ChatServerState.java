@@ -25,6 +25,7 @@ public class ChatServerState implements ServerState {
         this.logger = logger;
     }
 
+    @Override
     public void switchState(String str, ClientIO client) {
         JSONObject response = new JSONObject();
         JSONObject json;

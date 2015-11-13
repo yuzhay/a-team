@@ -3,8 +3,12 @@ package com.jet.edu.server;
 import com.jet.edu.ChatLogger;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.DriverManager;
 
-import java.sql.*;
 
 /**
  * Created by Yuriy on 12.11.2015.

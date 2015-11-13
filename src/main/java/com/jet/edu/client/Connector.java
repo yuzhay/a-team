@@ -2,7 +2,11 @@ package com.jet.edu.client;
 
 import org.json.JSONObject;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.IOException;
 import java.net.Socket;
 
 /**
