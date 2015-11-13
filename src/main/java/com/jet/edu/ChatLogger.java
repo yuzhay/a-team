@@ -11,7 +11,7 @@ import java.util.logging.Logger;
  */
 public class ChatLogger implements Serializable {
     private Logger logger = Logger.getLogger("System");
-    private String filepath;
+    private FileHandler handler;
 
     /**
      * Constructor
@@ -20,12 +20,11 @@ public class ChatLogger implements Serializable {
      */
     public ChatLogger(String filepath){
         try{
-            this.filepath = filepath;
-            FileHandler fileHandler = new FileHandler();
+            this.handler = new FileHandler(filepath);
             logger.setUseParentHandlers(false);
-            logger.addHandler(fileHandler);
+            logger.addHandler(handler);
         } catch (IOException e){
-            this.filepath = null;
+            this.handler = null;
             this.logger.log(Level.WARNING,"ERROR WITH FILE! LOGS WILL BE WRITE INTO CONSOLE", e);
         }
     }
