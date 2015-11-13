@@ -3,6 +3,7 @@ package com.jet.edu;
 import com.jet.edu.server.ChatStorage;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -25,8 +26,4 @@ public class StorageTest {
 
     }
 
-    @Test
-    public void testUser(){
-
-    }
 }
