@@ -12,8 +12,6 @@ import java.net.Socket;
 public class Connector {
     Socket socket;
     private String charset = "UTF-8";
-    private BufferedWriter bw;
-    private BufferedReader br;
 
     /**
      * connection open
@@ -24,10 +22,6 @@ public class Connector {
     public Connector(String host, int port) throws ChatException {
         try {
             socket = new Socket(host, port);
-            bw = new BufferedWriter(
-                    new OutputStreamWriter(socket.getOutputStream(), charset));
-            br = new BufferedReader(
-                    new InputStreamReader(socket.getInputStream(), charset));
         } catch (IOException e) {
             throw new ChatException("", e);
         }
@@ -41,10 +35,8 @@ public class Connector {
      */
     public String sendMessage(JSONObject jsonMessage) throws ChatException {
         StringBuilder sb = new StringBuilder();
-        try {
-
-            BufferedWriter bw = new BufferedWriter(
-                    new OutputStreamWriter(socket.getOutputStream(), charset));
+        try (BufferedWriter bw = new BufferedWriter(
+                    new OutputStreamWriter(socket.getOutputStream(), charset));) {
             InputStreamReader isr = new InputStreamReader(socket.getInputStream());
             bw.write(jsonMessage.toString() + System.lineSeparator());
             bw.flush();
