@@ -41,6 +41,8 @@ public class RegisterState implements State {
         JSONObject messageFromServer = new JSONObject(msgFromServer);
         String message = messageFromServer.get("status").toString();
         if (message.equals("ok")) {
+            System.out.println(message);
+            System.out.flush();
             return true;
         } else {
             return false;

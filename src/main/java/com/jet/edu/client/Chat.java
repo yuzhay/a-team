@@ -79,7 +79,6 @@ public class Chat implements State{
                     System.out.println("Имя уже занято. Повторите попытку ввода!");
                 } else {
                     userName = message;
-                   // ListenerServer();
                 }
         } else if (messageWithCommand.startsWith(HIST)) {
             jsonObject.put("cmd", HIST);
