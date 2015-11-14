@@ -4,18 +4,15 @@ import com.jet.edu.client.Chat;
 import com.jet.edu.client.ChatException;
 import com.jet.edu.client.Connector;
 import com.jet.edu.client.Factory;
-import org.fest.assertions.Assertions;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.objenesis.Objenesis;
-import org.objenesis.ObjenesisException;
-import org.objenesis.ObjenesisHelper;
-import org.objenesis.ObjenesisStd;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.lang.reflect.Field;
 import java.util.Random;
 import java.util.Scanner;
@@ -36,7 +33,7 @@ public class ChatClientTest {
         port = rnd.nextInt(64000) + 1000;
         mockFactory = Mockito.mock(Factory.class);
         mockConnector = Mockito.mock(Connector.class);
-        chatClient = new Chat(mockFactory,mockConnector);
+      //  chatClient = new Chat(mockFactory,mockConnector);
         System.setOut(new PrintStream(OUT));
     }
 
