@@ -16,7 +16,7 @@ public class Chat {
     public static final String HIST = "/hist";
     public static final String SND = "/snd";
 
-    private Scanner scanner = new Scanner(System.in);
+    private final Scanner scanner = new Scanner(System.in);
     private String userName;
 
     /**
@@ -55,13 +55,13 @@ public class Chat {
     }
 
     private void managerState(String messageWithCommand) throws ChatException {
-        JSONObject jsonObject = new JSONObject();
         String message = messageWithCommand.substring(messageWithCommand.indexOf(" ") + 1);
 
         if (messageWithCommand.trim().equals(SND)) {
             System.out.println("некорректное сообщение!");
             return;
         }
+        JSONObject jsonObject = new JSONObject();
         if (messageWithCommand.startsWith(CHID)) {
             if (checkName(message)) {
                 jsonObject.put("cmd", CHID);

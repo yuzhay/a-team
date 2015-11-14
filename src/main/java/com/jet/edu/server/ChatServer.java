@@ -17,7 +17,7 @@ import java.util.List;
 public class ChatServer implements Server {
     //region private fields
     private final Charset charset = Charset.forName("utf-8");
-    private final ChatLogger logger = new ChatLogger("ChatServer.log");
+    private ChatLogger logger = new ChatLogger("ChatServer.log");
     private ServerSocket socket;
     private Thread serverThread;
     private Accepter accepter = new Accepter();

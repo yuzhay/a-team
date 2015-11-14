@@ -16,7 +16,7 @@ import java.sql.DriverManager;
 public class ChatStorage implements Storage {
     private final String connString;
     private Connection conn = null;
-    private final ChatLogger logger = new ChatLogger("ChatServer.log");
+    private ChatLogger logger = new ChatLogger("ChatServer.log");
 
     /**
      * Constructor with provided connection string
