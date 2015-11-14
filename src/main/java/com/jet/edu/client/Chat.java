@@ -20,8 +20,8 @@ public class Chat {
     private String userName;
 
     /**
-     * initialize port and host
-     * and connection
+     *Constructor Chat
+     * initialize factory and Connector
      *
      * @param factory
      * @param connector
