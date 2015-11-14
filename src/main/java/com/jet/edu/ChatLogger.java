@@ -28,8 +28,9 @@ public class ChatLogger {
             FileHandler handler = new FileHandler(filepath);
             logger.setUseParentHandlers(false);
             logger.addHandler(handler);
-        } catch (IOException e) {
-            this.logger.log(Level.WARNING, "ERROR WITH FILE! LOGS WILL BE WRITE INTO CONSOLE", e);
+        } catch (IOException e){
+            if (logger.isLoggable(Level.WARNING))
+                logger.log(Level.WARNING,"ERROR WITH FILE! LOGS WILL BE WRITE INTO CONSOLE", e);
         }
     }
 
@@ -38,8 +39,9 @@ public class ChatLogger {
      *
      * @param message - message
      */
-    public void printInfo(String message, Throwable e) {
-        logger.log(Level.INFO, message + System.lineSeparator() + e);
+    public void printInfo(String message, Throwable e){
+        if (logger.isLoggable(Level.INFO))
+            logger.log(Level.INFO,message + System.lineSeparator()+ e);
     }
 
     /**
@@ -47,8 +49,9 @@ public class ChatLogger {
      *
      * @param message - message
      */
-    public void printWarning(String message, Throwable e) {
-        logger.log(Level.WARNING, message + System.lineSeparator() + e);
+    public void printWarning(String message,  Throwable e){
+        if (logger.isLoggable(Level.WARNING))
+            logger.log(Level.WARNING,message+ System.lineSeparator()+ e);
     }
 
     /**
@@ -56,8 +59,9 @@ public class ChatLogger {
      *
      * @param message - message
      */
-    public void printWarning(String message) {
-        logger.log(Level.WARNING, message);
+    public void printWarning(String message){
+        if (logger.isLoggable(Level.WARNING))
+            logger.log(Level.WARNING,message);
     }
 
     /**
@@ -65,8 +69,9 @@ public class ChatLogger {
      *
      * @param message - message
      */
-    public void printSevere(String message, Throwable e) {
-        logger.log(Level.SEVERE, message + System.lineSeparator() + e);
+    public void printSevere(String message, Throwable e){
+        if (logger.isLoggable(Level.SEVERE))
+            logger.log(Level.SEVERE,message + System.lineSeparator()+ e);
     }
 
     public void printConsole(String message) {
