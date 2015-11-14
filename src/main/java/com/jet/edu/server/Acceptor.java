@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * ChatServer Acceptor class
  * Created by Yuriy on 14.11.2015.
  */
 //region Acceptor
@@ -19,7 +20,7 @@ class Acceptor implements Runnable {
     private final ServerSocket serverSocket;
     private final Charset charset;
     //region private fields
-    private HashMap<Socket, ClientIO> clientsMap = new HashMap<>();
+    private final HashMap<Socket, ClientIO> clientsMap = new HashMap<>();
     //endregion
 
     public Acceptor(ServerSocket serverSocket, ChatLogger logger, Charset charset){
@@ -77,7 +78,8 @@ class Acceptor implements Runnable {
     private class OneThreadWorker implements Runnable {
         @Override
         public void run() {
-            ChatServerState css = new ChatServerState(clientsMap, logger);
+            ChatServerModel css = new ChatServerModel(clientsMap, logger);
+            //noinspection InfiniteLoopStatement
             while (true) {
                 synchronized (clientsMap) {
                     for (Map.Entry<Socket, ClientIO> elem : clientsMap.entrySet()) {
@@ -92,7 +94,7 @@ class Acceptor implements Runnable {
                             String line = br.readLine();
                             System.out.println(elem.getKey().toString() + ": " + line);
 
-                            css.switchState(line, clientsMap.get(elem.getKey()));
+                            css.execute(line, clientsMap.get(elem.getKey()));
                         } catch (IOException e) {
                             logger.printWarning("IO client", e);
                             removeClient(elem.getKey());

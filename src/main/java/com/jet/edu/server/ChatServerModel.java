@@ -10,18 +10,18 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.Hashtable;
 
 /**
+ * Chat Server Model
  * Created by Yuriy on 12.11.2015.
  */
-public class ChatServerState implements ServerState {
+public class ChatServerModel implements ServerModel {
 
     private final Storage storage = new ChatStorage();
     private HashMap<Socket, ClientIO> clients;
     private ChatLogger logger;
 
-    public ChatServerState(HashMap<Socket, ClientIO> clients, ChatLogger logger) {
+    public ChatServerModel(HashMap<Socket, ClientIO> clients, ChatLogger logger) {
         this.clients = clients;
         this.logger = logger;
 
@@ -32,7 +32,7 @@ public class ChatServerState implements ServerState {
         }
     }
 
-    public void switchState(String str, ClientIO client) {
+    public void execute(String str, ClientIO client) {
         JSONObject response = new JSONObject();
         JSONObject json;
 
@@ -101,7 +101,6 @@ public class ChatServerState implements ServerState {
             case COMMAND_HIST:
                 response.put("history", storage.getHistory());
                 sendResponse(response, osw);
-                return;
         }
     }
 
@@ -130,5 +129,11 @@ public class ChatServerState implements ServerState {
                 logger.printWarning("Not send Messaged to sockets", e);
             }
         }
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        storage.disconnect();
+        super.finalize();
     }
 }
