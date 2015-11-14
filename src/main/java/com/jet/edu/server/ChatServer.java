@@ -12,7 +12,7 @@ import java.nio.charset.Charset;
 /**
  * Created by Yuriy on 12.11.2015.
  */
-public class ChatServer{
+public class ChatServer {
     //region private fields
     private final Charset charset = Charset.forName("utf-8");
     private final ChatLogger logger = new ChatLogger("ChatServer.log");
@@ -46,13 +46,10 @@ public class ChatServer{
      *
      * @param port set TCP port
      */
-    public ChatServer(int port) {
-        try {
-            socket = new ServerSocket(port);
-            acceptor = new Acceptor(socket, logger, charset);
-        } catch (IOException e) {
-            logger.printSevere("Server can't bind localhost:" + port, e);
-        }
+    public ChatServer(int port) throws IOException {
+        socket = new ServerSocket(port);
+        acceptor = new Acceptor(socket, logger, charset);
+
     }
 
     //endregion

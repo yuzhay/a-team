@@ -124,7 +124,7 @@ public class ChatServerModel implements ServerModel {
             try {
                 c.getOutputStream().write(json.toString() + System.lineSeparator());
                 c.getOutputStream().flush();
-                logger.printConsole("Server To all:");
+                logger.printConsole("Server To all: " + json.toString());
             } catch (IOException e) {
                 logger.printWarning("Not send Messaged to sockets", e);
             }

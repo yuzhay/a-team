@@ -1,7 +1,9 @@
 package com.jet.edu.client;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.Socket;
 
 /**
@@ -23,10 +25,9 @@ public class Listener implements Runnable {
         try {
             while ((inputStreamReader = socket.getInputStream()).available() == 0) {
             }
+            BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-            while (inputStreamReader.available() > 0) {
-                messageUsers += inputStreamReader.read();
-            }
+            String messageUsers = br.readLine();
             System.out.println(messageUsers);
             System.out.flush();
             messageUsers = "";
