@@ -17,31 +17,55 @@ import java.net.Socket;
  * Project04
  */
 public class ClientApp {
-    private static int port = 52341;
+    public static final int ioPort = 52349;
 
-    public static void main(String[] args) throws ChatException,IOException {
+    public static void main(String[] args) throws ChatException, IOException {
+        System.out.println("[Input] Chat client");
+        new Thread(new OutputServer(ioPort)).start();
+
         Chat chat = new Chat(new Factory(), new Connector(new Socket("127.0.0.1", 12348)));
-        System.out.println("Chat client started");
+
         chat.readConsole();
     }
 
     private ClientApp() {
     }
-    
-    private static class OutputServer implements Runnable {
-        @Override
-        public void run() {
-            ServerSocket ss = null;
-            try {
-                ss = new ServerSocket(port);
+}
+
+/**
+ * This is class is used to redefine console output
+ */
+class OutputServer implements Runnable {
+    private final int port;
+
+    /**
+     * Default constructor
+     *
+     * @param port select port which will be used
+     */
+    public OutputServer(int port) {
+        this.port = port;
+    }
+
+    /**
+     * Run server
+     */
+    @Override
+    public void run() {
+        try (ServerSocket ss = new ServerSocket(port)) {
+            //noinspection InfiniteLoopStatement
+            while (true) {
                 Socket c = ss.accept();
                 PrintWriter out = new PrintWriter(
                         new OutputStreamWriter(c.getOutputStream()));
                 PrintStream ps = new PrintStream(new WriterOutputStream(out));
                 System.setOut(ps);
-            } catch (IOException e) {
-                e.printStackTrace();
+                System.setErr(ps);
+                System.out.println("[Output] Chat client");
+                System.out.flush();
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

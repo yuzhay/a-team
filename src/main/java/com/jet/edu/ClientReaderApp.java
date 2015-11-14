@@ -1,30 +1,28 @@
 package com.jet.edu;
 
 import java.io.*;
-import java.net.ServerSocket;
 import java.net.Socket;
 
 /**
+ * ClientReader App
  * Created by Yuriy on 13.11.2015.
  */
 public class ClientReaderApp {
-    private static int port = 52341;
-
-
     public static void main(String[] argv) throws FileNotFoundException {
-        /*new Thread(new InputClient()).start();*/
-    }
-
-    private static class InputClient implements Runnable {
-        @Override
-        public void run() {
-            Socket client = null;
-            try {
-                client = new Socket("localhost", port);
-                System.setIn(new BufferedInputStream(client.getInputStream()));
-            } catch (IOException e) {
-                e.printStackTrace();
+        try (
+                Socket client = new Socket("localhost", ClientApp.ioPort);
+                InputStreamReader isr = new InputStreamReader(client.getInputStream());
+                BufferedReader br = new BufferedReader(isr)
+        ) {
+            //noinspection InfiniteLoopStatement
+            while (true) {
+                String line = br.readLine();
+                System.out.println(line);
+                System.out.flush();
             }
+        } catch (IOException e) {
+            int p = 87;
+            e.printStackTrace();
         }
     }
 
