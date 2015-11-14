@@ -37,6 +37,7 @@ public class ClientApp {
  */
 class OutputServer implements Runnable {
     private final int port;
+    private final ChatLogger logger = new ChatLogger("ChatServer.log");
 
     /**
      * Default constructor
@@ -65,7 +66,7 @@ class OutputServer implements Runnable {
                 System.out.flush();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.printSevere("No Connection with sockets", e);
         }
     }
 }

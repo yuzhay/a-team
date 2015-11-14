@@ -131,7 +131,6 @@ public class ChatServerModel implements ServerModel {
         }
     }
 
-    @Override
     protected void finalize() throws Throwable {
         storage.disconnect();
         super.finalize();

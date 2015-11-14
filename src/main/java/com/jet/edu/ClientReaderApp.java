@@ -8,6 +8,8 @@ import java.net.Socket;
  * Created by Yuriy on 13.11.2015.
  */
 public class ClientReaderApp {
+    private static final ChatLogger logger = new ChatLogger("ChatServer.log");
+
     public static void main(String[] argv) throws FileNotFoundException {
         try (
                 Socket client = new Socket("localhost", ClientApp.ioPort);
@@ -22,7 +24,7 @@ public class ClientReaderApp {
             }
         } catch (IOException e) {
             int p = 87;
-            e.printStackTrace();
+            logger.printSevere("No Connection with sockets", e);
         }
     }
 

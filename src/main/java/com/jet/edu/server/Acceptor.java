@@ -50,7 +50,7 @@ class Acceptor implements Runnable {
                 logger.printWarning("timeout", ex);
                     /*Do nothing. Time is out. Wait for next client*/
             } catch (IOException e) {
-                logger.printWarning(e.toString());
+                logger.printWarning("Client serverSocket IO error", e);
                 logger.printConsole("Client serverSocket IO error. See log.");
             }
         }
