@@ -34,22 +34,22 @@ public class HistoryState implements State {
      */
     public void writerToConnector() throws ChatException {
         String resp = connector.sendMessage(this.jsonObject);
-        if (resp.equals(""))
+        if (resp.isEmpty()) {
+            System.out.println("История пуста");
             return;
+        }
         JSONObject responceJson = new JSONObject(resp);
         JSONArray history = responceJson.getJSONArray("history");
         Iterator<Object> jsonObjectIterator = history.iterator();
         while (jsonObjectIterator.hasNext()) {
             JSONObject jsonObject = (JSONObject) jsonObjectIterator.next();
-
             println(
-                    String.format("%s[%s]: %s",
+                    String.format("%s[%s]:\t%s",
                             jsonObject.getString("NICKNAME"),
                             jsonObject.getString("TIME"),
                             jsonObject.getString("MESSAGE")
 
                     ));
-
         }
 
     }

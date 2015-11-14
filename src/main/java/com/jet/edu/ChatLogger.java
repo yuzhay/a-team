@@ -10,7 +10,6 @@ import java.util.logging.Logger;
  */
 public class ChatLogger {
     private final static Logger logger = Logger.getLogger("System");
-    private FileHandler handler;
 
     /**
      * Constructor
@@ -19,11 +18,10 @@ public class ChatLogger {
      */
     public ChatLogger(String filepath){
         try{
-            this.handler = new FileHandler(filepath);
+            FileHandler handler = new FileHandler(filepath);
             logger.setUseParentHandlers(false);
             logger.addHandler(handler);
         } catch (IOException e){
-            this.handler = null;
             this.logger.log(Level.WARNING,"ERROR WITH FILE! LOGS WILL BE WRITE INTO CONSOLE", e);
         }
     }

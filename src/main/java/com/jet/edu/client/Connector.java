@@ -2,7 +2,11 @@ package com.jet.edu.client;
 
 import org.json.JSONObject;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.IOException;
 import java.net.Socket;
 
 /**
@@ -25,13 +29,11 @@ public class Connector {
     /**
      * connection open
      *
-     * @param host - host address
-     * @param port - number of port
      * @throws ChatException
      */
-    public Connector(String host, int port) throws ChatException {
+    public Connector(Socket socket) throws ChatException {
         try {
-            socket = new Socket(host, port);
+            this.socket = socket;
             bw = new BufferedWriter(
                     new OutputStreamWriter(socket.getOutputStream(), CHARSET));
             br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -54,8 +56,7 @@ public class Connector {
             while (!br.ready()) {}
             return br.readLine();
         } catch (IOException e) {
-            throw new ChatException("", e);
+            throw new ChatException("Соединение с сервером разорвано", e);
         }
     }
-
 }

@@ -25,7 +25,6 @@ public class RegisterState implements State {
 
     /**
      * write messages registrationName to Connector
-     *
      * @throws ChatException
      */
     public boolean writerToConnector() throws ChatException {
@@ -41,8 +40,7 @@ public class RegisterState implements State {
     private boolean checkMessageFromServer(String msgFromServer) {
         JSONObject messageFromServer = new JSONObject(msgFromServer);
         String message = messageFromServer.get("status").toString();
-
-        if (message.equals("ok")) {
+        if (message.equals(OK)) {
             return true;
         } else {
             return false;

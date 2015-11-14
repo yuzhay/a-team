@@ -22,14 +22,12 @@ public class SendState implements State {
         this.connector = connector;
     }
 
-    /*
+    /**
      * write messages to Connector
      * @throws ChatException
      */
     public void writeToConnector() throws ChatException{
         String responce = connector.sendMessage(this.jsonObject);
-
+        System.out.println(responce);
     }
-
-
 }
