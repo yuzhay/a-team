@@ -29,7 +29,6 @@ public class ChatServerTest {
     }
 
     @Test(timeout = 20000)
-    @Ignore
     public void shouldServerResponseOnChidCommand() throws IOException {
         Socket s = new Socket("localhost", port);
         OutputStreamWriter sw = new OutputStreamWriter(s.getOutputStream());
