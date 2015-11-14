@@ -1,8 +1,13 @@
 package com.jet.edu.client;
 
+import com.jet.edu.ChatLogger;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.Scanner;
 
@@ -13,10 +18,11 @@ import java.util.Scanner;
 public class Chat implements State{
     //region fields
     private final Connector connector;
-    private final Factory factory;   
+    private final Factory factory;
     private Scanner scanner = new Scanner(System.in);
     private String userName;
     private Socket socket;
+
     //endregion
 
     /**
@@ -43,6 +49,7 @@ public class Chat implements State{
     public void readConsole() throws ChatException {
         String message;
         ListenerServer();
+
         while (scanner.hasNext()) {
             message = scanner.nextLine();
             managerState(message);
@@ -69,19 +76,13 @@ public class Chat implements State{
             System.out.println("Некорректное сообщение");
             return;
         }
-
-
-
         if (messageWithCommand.startsWith(CHID) && checkName(message)) {
                 jsonObject.put("cmd", CHID);
                 jsonObject.put("msg", message);
-            
+
                 factory.setRegisterState(jsonObject, connector);
-                if (!factory.getRegisterState().writerToConnector()) {
-                    System.out.println("Имя уже занято. Повторите попытку ввода!");
-                } else {
-                    userName = message;
-                }
+                factory.getRegisterState().writerToConnector();
+                userName = message;
 
         } else if (messageWithCommand.startsWith(HIST)) {
             jsonObject.put("cmd", HIST);
@@ -114,6 +115,81 @@ public class Chat implements State{
             return false;
         }
         return true;
+    }
+
+    private class Listener implements Runnable {
+        //region fields
+        private Socket socket;
+        private String messageUsers = "";
+        private InputStream inputStreamReader;
+        private BufferedReader br;
+        private final ChatLogger logger = new ChatLogger();
+
+        //endregion
+
+        public Listener(Socket socket) {
+            this.socket = socket;
+            try {
+                br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            } catch (IOException e) {
+                logger.printWarning("Cant create reader", e);
+            }
+        }
+
+        @Override
+        public void run() {
+            try {
+                String messageUsers;
+                while (true) {
+                    while ((messageUsers = br.readLine()) != null) {
+                        parse(messageUsers);
+                    }
+                }
+            } catch (IOException e) {
+                logger.printSevere("IO listener", e);
+            }
+        }
+
+        private void parse(String msg) {
+            JSONObject json = new JSONObject(msg);
+
+            if (json.has("cmd")) {
+                switch (json.getString("cmd")) {
+                    case "/snd":
+                        System.out.println(
+                                String.format("%s[%s]:\t%s",
+                                        json.getString("name"),
+                                        json.getString("msg"),
+                                        json.getString("time")
+                                ));
+                        break;
+                    case "/hist": {
+                        JSONArray history = json.getJSONArray("history");
+                        for (Object aHistory : history) {
+                            JSONObject jsonObject = (JSONObject) aHistory;
+                            System.out.println(
+                                    String.format("%s[%s]:\t%s",
+                                            jsonObject.getString("NICKNAME"),
+                                            jsonObject.getString("TIME"),
+                                            jsonObject.getString("MESSAGE")
+
+                                    ));
+                        }
+                        break;
+                    }
+                    case "/chid": {
+                        String message = json.getString("status").toString();
+                        if (message.equals("ok")) {
+                            System.out.println(message);
+                        } else {
+                            System.out.println("Имя уже занято");
+                            userName = "";
+                        }
+                    }
+                }
+                System.out.flush();
+            }
+        }
     }
     //endregion
 }

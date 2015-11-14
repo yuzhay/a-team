@@ -34,24 +34,6 @@ public class HistoryState implements State {
      * @throws ChatException
      */
     public void writerToConnector() throws ChatException {
-        String resp = connector.sendMessage(this.jsonObject);
-        if (resp.isEmpty()) {
-            System.out.println("История пуста");
-            return;
-        }
-        JSONObject responceJson = new JSONObject(resp);
-        JSONArray history = responceJson.getJSONArray("history");
-
-        for (Object aHistory : history) {
-            JSONObject jsonObject = (JSONObject) aHistory;
-            println(
-                    String.format("%s[%s]:\t%s",
-                            jsonObject.getString("NICKNAME"),
-                            jsonObject.getString("TIME"),
-                            jsonObject.getString("MESSAGE")
-
-                    ));
-        }
-
+        connector.sendMessage(jsonObject);
     }
 }
