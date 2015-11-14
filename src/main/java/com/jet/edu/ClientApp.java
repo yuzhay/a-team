@@ -42,6 +42,7 @@ public class ClientApp {
  */
 class OutputServer implements Runnable {
     private final int port;
+    private final ChatLogger logger = new ChatLogger();
 
     /**
      * Default constructor
@@ -70,6 +71,7 @@ class OutputServer implements Runnable {
                 System.out.flush();
             }
         } catch (IOException e) {
+            logger.printSevere("No Connection with sockets", e);
             System.out.println("Can't start client app server on port" + port);
             System.exit(1);
         }

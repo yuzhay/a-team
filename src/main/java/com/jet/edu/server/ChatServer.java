@@ -4,11 +4,8 @@ import com.jet.edu.ChatLogger;
 
 import java.io.*;
 import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.SocketTimeoutException;
 import java.nio.charset.Charset;
-import java.util.HashMap;
-import java.util.Map;
+
 
 /**
  * Created by Yuriy on 12.11.2015.
