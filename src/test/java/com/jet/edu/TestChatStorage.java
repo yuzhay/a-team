@@ -47,8 +47,6 @@ public class TestChatStorage {
     public void shouldCorrectlyGetHistory() throws Exception {
         chatStorage.connect();
 
-
-
         JSONArray jsonArray = chatStorage.getHistory();
 
         Assert.assertEquals(jsonArray.getJSONObject(0).getString("MESSAGE"), "Hello world!");
