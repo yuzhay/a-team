@@ -28,15 +28,14 @@ public class Connector {
 
     /**
      * connection open
-     *
      * @throws ChatException
      */
     public Connector(Socket socket) throws ChatException {
         try {
             this.socket = socket;
             bw = new BufferedWriter(
-                    new OutputStreamWriter(socket.getOutputStream(), CHARSET));
-            br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                    new OutputStreamWriter(this.socket.getOutputStream(), CHARSET));
+            br = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
         }
         catch (IOException e) {
             throw new ChatException("", e);

@@ -28,6 +28,7 @@ public class Listener implements Runnable {
                 messageUsers += inputStreamReader.read();
             }
             System.out.println(messageUsers);
+            System.out.flush();
             messageUsers = "";
         } catch (IOException e) {
             e.printStackTrace();

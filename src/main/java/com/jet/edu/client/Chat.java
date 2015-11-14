@@ -13,17 +13,18 @@ import java.util.Scanner;
 public class Chat implements State{
     //region fields
     private final Connector connector;
-    private final Factory factory;
+    private final Factory factory;   
     private Scanner scanner = new Scanner(System.in);
     private String userName;
     private Socket socket;
     //endregion
 
-    //region constructor
     /**
      * initialize port and host
      * and connection
+     *
      * @param factory
+     * @param socket
      * @throws ChatException
      */
     public Chat(Factory factory, Socket socket) throws ChatException {
@@ -72,6 +73,7 @@ public class Chat implements State{
         if (messageWithCommand.startsWith(CHID) && checkName(message)) {
                 jsonObject.put("cmd", CHID);
                 jsonObject.put("msg", message);
+            
                 factory.setRegisterState(jsonObject, connector);
                 if (!factory.getRegisterState().writerToConnector()) {
                     System.out.println("Имя уже занято. Повторите попытку ввода!");
@@ -83,11 +85,6 @@ public class Chat implements State{
             jsonObject.put("cmd", HIST);
             factory.setHistoryState(jsonObject, connector);
             factory.getHistoryState().writerToConnector();
-        } else if (messageWithCommand.startsWith(CHROOM)){
-            jsonObject.put("cmd", CHROOM);
-            jsonObject.put("room", message);
-            factory.getRoomState(jsonObject, connector);
-            factory.getRoomState().writerToConnector();
         } else {
             if (!checkSizeMessage(message)) {
                 System.out.println("Сообщение больше 150 символов! Повторите попытку.");

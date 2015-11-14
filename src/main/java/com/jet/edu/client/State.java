@@ -12,7 +12,12 @@ public interface State {
     String OK = "ok";
     //endregion
 
+    /**
+     * Print message and flush buffer
+     * @param message parameter to print
+     */
     default void println(String message) {
         System.out.println(message);
+        System.out.flush();
     }
 }
