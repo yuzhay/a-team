@@ -38,7 +38,6 @@ public class ChatServerModel implements ServerModel {
 
         OutputStreamWriter osw = client.getOutputStream();
         BufferedReader br = client.getInputStream();
-
         String cmd;
         String msg = "";
 
@@ -78,7 +77,6 @@ public class ChatServerModel implements ServerModel {
                     JSONObject ownerResponse = new JSONObject();
                     ownerResponse.put("status", "ok");
                     sendResponse(ownerResponse, osw);
-
                     sendResponseToAll(response, osw);
                 } else {
                     response.put("status", "error");

@@ -22,7 +22,6 @@ public class Chat implements State{
     /**
      * initialize port and host
      * and connection
-     *
      * @param factory
      * @param socket
      * @throws ChatException
@@ -43,6 +42,7 @@ public class Chat implements State{
      */
     public void readConsole() throws ChatException {
         String message;
+
         while (scanner.hasNext()) {
             message = scanner.nextLine();
             managerState(message);
@@ -80,6 +80,7 @@ public class Chat implements State{
                 } else {
                     userName = message;
                 }
+
         } else if (messageWithCommand.startsWith(HIST)) {
             jsonObject.put("cmd", HIST);
             factory.setHistoryState(jsonObject, connector);
@@ -94,7 +95,6 @@ public class Chat implements State{
             jsonObject.put("name", userName);
             factory.setSendState(jsonObject, connector);
             factory.getSendState().writeToConnector();
-            //ListenerServer();
         }
     }
 

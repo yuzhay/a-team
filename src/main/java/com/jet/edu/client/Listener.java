@@ -25,8 +25,11 @@ public class Listener implements Runnable {
             }
 
             while (inputStreamReader.available() > 0) {
-                messageUsers += inputStreamReader.read();
+                messageUsers += (char) inputStreamReader.read();
             }
+
+
+
             System.out.println(messageUsers);
             System.out.flush();
             messageUsers = "";
