@@ -9,6 +9,17 @@ public class Factory {
     HistoryState historyState;
     RegisterState registerState;
     SendState sendState;
+    RoomState roomState;
+
+    /**
+     * initialize state the entrance to the room
+     * @param jsonObject
+     * @param connector
+     * @return
+     */
+    public RoomState getRoomState(JSONObject jsonObject, Connector connector) {
+        return roomState = new RoomState(jsonObject, connector);
+    }
 
     /**
      * initialize JsonObject and connector
@@ -28,9 +39,12 @@ public class Factory {
         this.registerState = new RegisterState(jsonObject, connector);
     }
 
+
+
     /**
      *  set State of send command
      * @param jsonObject
+
      * @param connector
      */
     public void setSendState(JSONObject jsonObject, Connector connector) {
@@ -58,4 +72,13 @@ public class Factory {
     public SendState getSendState() {
         return sendState;
     }
+
+    /**
+     * get Room state command
+     * @return
+     */
+    public RoomState getRoomState() {
+        return roomState;
+    }
+
 }

@@ -19,8 +19,8 @@ public class HistoryState implements State {
     /**
      * initialize connection and jsonObject
      *
-     * @param jsonObject object to parse
-     * @param connector used to send information
+     * @param jsonObject
+     * @param connector
      */
     public HistoryState(JSONObject jsonObject, Connector connector) {
         this.jsonObject = jsonObject;
@@ -34,8 +34,10 @@ public class HistoryState implements State {
      */
     public void writerToConnector() throws ChatException {
         String resp = connector.sendMessage(this.jsonObject);
-        if (resp.equals(""))
+        if (resp.isEmpty()) {
+            System.out.println("История пуста");
             return;
+        }
         JSONObject responceJson = new JSONObject(resp);
         JSONArray history = responceJson.getJSONArray("history");
 
@@ -49,6 +51,7 @@ public class HistoryState implements State {
                             jsonObject.getString("MESSAGE")
 
                     ));
+
         }
 
     }

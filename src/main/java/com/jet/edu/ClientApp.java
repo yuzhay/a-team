@@ -3,7 +3,6 @@ package com.jet.edu;
 
 import com.jet.edu.client.Chat;
 import com.jet.edu.client.ChatException;
-import com.jet.edu.client.Connector;
 import com.jet.edu.client.Factory;
 import org.apache.commons.io.output.WriterOutputStream;
 
@@ -11,7 +10,6 @@ import java.io.IOException;
 import java.net.Socket;
 import java.io.*;
 import java.net.ServerSocket;
-import java.net.Socket;
 
 /**
  * Project04
@@ -28,7 +26,7 @@ public class ClientApp {
         System.out.println("[Input] Chat client");
         new Thread(new OutputServer(port)).start();
 
-        Chat chat = new Chat(new Factory(), new Connector(new Socket("127.0.0.1", 12348)));
+        Chat chat = new Chat(new Factory(), new Socket("127.0.0.1", 12348));
 
         chat.readConsole();
     }
@@ -36,8 +34,7 @@ public class ClientApp {
     private ClientApp() {
     }
 }
-
-/**
+    /**
  * This is class is used to redefine console output
  */
 class OutputServer implements Runnable {

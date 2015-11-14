@@ -25,7 +25,6 @@ public class RegisterState implements State {
 
     /**
      * write messages registrationName to Connector
-     *
      * @throws ChatException
      */
     public boolean writerToConnector() throws ChatException {

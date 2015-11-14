@@ -28,8 +28,6 @@ public class Connector {
 
     /**
      * connection open
-     *
-     * @param socket - remote socket
      * @throws ChatException
      */
     public Connector(Socket socket) throws ChatException {
@@ -57,7 +55,7 @@ public class Connector {
             while (!br.ready()) {}
             return br.readLine();
         } catch (IOException e) {
-            throw new ChatException("", e);
+            throw new ChatException("Соединение с сервером разорвано", e);
         }
     }
 }

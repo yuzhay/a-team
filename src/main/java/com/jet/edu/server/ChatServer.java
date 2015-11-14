@@ -2,19 +2,21 @@ package com.jet.edu.server;
 
 import com.jet.edu.ChatLogger;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.nio.charset.Charset;
-
 
 /**
  * Created by Yuriy on 12.11.2015.
  */
-public class ChatServer {
+public class ChatServer{
     //region private fields
     private final Charset charset = Charset.forName("utf-8");
     private final ChatLogger logger = new ChatLogger("ChatServer.log");
-    private ServerSocket serverSocket;
+    private ServerSocket socket;
     private Thread serverThread;
     private Acceptor acceptor;
     //endregion
@@ -39,7 +41,6 @@ public class ChatServer {
         logger.printConsole("Server stopped");
     }
 
-
     /**
      * Default ChatServer constructor
      *
@@ -47,14 +48,14 @@ public class ChatServer {
      */
     public ChatServer(int port) {
         try {
-            serverSocket = new ServerSocket(port);
-            acceptor = new Acceptor(serverSocket, logger, charset);
+            socket = new ServerSocket(port);
+            acceptor = new Acceptor(socket, logger, charset);
         } catch (IOException e) {
             logger.printSevere("Server can't bind localhost:" + port, e);
         }
     }
 
-
+    //endregion
 }
 
 class ClientIO {
@@ -66,8 +67,8 @@ class ClientIO {
     /**
      * Default ClientIO constructor
      *
-     * @param br serverSocket input stream
-     * @param sw serverSocket output stream
+     * @param br socket input stream
+     * @param sw socket output stream
      */
     public ClientIO(BufferedReader br, OutputStreamWriter sw, BufferedInputStream bis) {
         this.br = br;
@@ -76,7 +77,7 @@ class ClientIO {
     }
 
     /**
-     * Get serverSocket input stream
+     * Get socket input stream
      *
      * @return input stream
      */
@@ -85,7 +86,7 @@ class ClientIO {
     }
 
     /**
-     * Get serverSocket buffered input stream
+     * Get socket buffered input stream
      *
      * @return input stream
      */
@@ -94,7 +95,7 @@ class ClientIO {
     }
 
     /**
-     * Get serverSocket output stream
+     * Get socket output stream
      *
      * @return output stream
      */
