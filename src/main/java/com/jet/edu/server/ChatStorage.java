@@ -12,7 +12,7 @@ import java.sql.*;
 public class ChatStorage implements Storage {
     private final String connString;
     private Connection conn = null;
-    private ChatLogger logger = new ChatLogger("ChatServer.log");
+    private ChatLogger logger = new ChatLogger();
 
     /**
      * Constructor with provided connection string

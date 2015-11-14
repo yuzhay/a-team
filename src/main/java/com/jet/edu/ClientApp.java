@@ -34,7 +34,7 @@ public class ClientApp {
  */
 class OutputServer implements Runnable {
     private final int port;
-    private final ChatLogger logger = new ChatLogger("ChatServer.log");
+    private final ChatLogger logger = new ChatLogger();
 
     /**
      * Default constructor

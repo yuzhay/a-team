@@ -8,7 +8,7 @@ import java.net.Socket;
  * Created by Yuriy on 13.11.2015.
  */
 public class ClientReaderApp {
-    private static final ChatLogger logger = new ChatLogger("ChatServer.log");
+    private static final ChatLogger logger = new ChatLogger();
 
     public static void main(String[] argv) throws FileNotFoundException {
         try (
