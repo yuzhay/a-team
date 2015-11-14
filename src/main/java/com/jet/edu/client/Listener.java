@@ -36,7 +36,7 @@ public class Listener implements Runnable {
             System.out.flush();
             messageUsers = "";
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.printSevere("IO listener", e);
         }
     }
 }
