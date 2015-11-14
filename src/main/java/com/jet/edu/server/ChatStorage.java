@@ -39,21 +39,28 @@ public class ChatStorage implements Storage {
      */
     @Override
     public long addMessage(String name, String msg) {
-        String query1 = "SELECT id FROM USERS WHERE name=?";
-        String query2 = "INSERT INTO APP.MESSAGES (USER_ID,MESSAGE) VALUES(?, ?)";
+        String selectUserIdQuery = "SELECT id FROM USERS WHERE name=?";
+        String insertMessageQuery = "INSERT INTO APP.MESSAGES (USER_ID,MESSAGE) VALUES(?, ?)";
+
         try {
             conn.setAutoCommit(false);
-            PreparedStatement iq = conn.prepareStatement(query1);
-            iq.setString(1, name);
-            ResultSet result = iq.executeQuery();
-            result.next();
-            int uid = result.getInt(1);
+            try (PreparedStatement iq = conn.prepareStatement(selectUserIdQuery);
+                 PreparedStatement iq2 = conn.prepareStatement(insertMessageQuery);
+            ) {
+                iq.setString(1, name);
+                ResultSet result = iq.executeQuery();
 
-            iq = conn.prepareStatement(query2);
-            iq.setInt(1, uid);
-            iq.setString(2, msg);
-            iq.executeUpdate();
+                if (result.next() == false) {
+                    return 0;
+                }
 
+                int uid = result.getInt(1);
+                result.close();
+
+                iq2.setInt(1, uid);
+                iq2.setString(2, msg);
+                iq2.executeUpdate();
+            }
             conn.commit();
         } catch (SQLException e) {
             try {
@@ -62,6 +69,7 @@ public class ChatStorage implements Storage {
                 logger.printSevere("SQL exception", e1);
             }
             logger.printSevere("SQL exception", e);
+            return 0;
         }
         return System.currentTimeMillis() / 1000L;
     }
@@ -96,6 +104,7 @@ public class ChatStorage implements Storage {
                 jsonObject.put("NICKNAME", result.getString("NAME"));
                 jsonArray.put(jsonObject);
             }
+            result.close();
         } catch (SQLException e) {
             logger.printSevere("SQL exception", e);
         }
@@ -141,9 +150,9 @@ public class ChatStorage implements Storage {
      */
     @Override
     public void addUser(String userName) {
-        String query = "INSERT INTO APP.USERS (NAME, ONLINE) VALUES(?, 1)";
+        String insertUserQuery = "INSERT INTO APP.USERS (NAME, ONLINE) VALUES(?, 1)";
         try (
-                PreparedStatement iq = conn.prepareStatement(query)) {
+                PreparedStatement iq = conn.prepareStatement(insertUserQuery)) {
             iq.setString(1, userName);
             iq.executeUpdate();
         } catch (SQLException e) {

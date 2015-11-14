@@ -24,6 +24,12 @@ public class ChatServerState implements ServerState {
     public ChatServerState(HashMap<Socket, ClientIO> clients, ChatLogger logger) {
         this.clients = clients;
         this.logger = logger;
+
+        try {
+            storage.connect();
+        } catch (SQLException e) {
+            logger.printSevere("Can't connect to Database", e);
+        }
     }
 
     public void switchState(String str, ClientIO client) {
@@ -52,12 +58,6 @@ public class ChatServerState implements ServerState {
         }
 
         response.put("status", "ok");
-
-        try {
-            storage.connect();
-        } catch (SQLException e) {
-            logger.printSevere(response.toString(), e);
-        }
 
         switch (cmd) {
             case COMMAND_SND:

@@ -19,11 +19,8 @@ import java.net.Socket;
 public class ClientApp {
     private static int port = 52341;
 
-    public static void main(String[] args) throws ChatException {
-        /*OutputServer outServer = new OutputServer();
-        new Thread(outServer).start();*/
-
-        Chat chat = new Chat(new Factory(), new Connector("127.0.0.1", 12348));
+    public static void main(String[] args) throws ChatException,IOException {
+        Chat chat = new Chat(new Factory(), new Connector(new Socket("127.0.0.1", 12348)));
         System.out.println("Chat client started");
         chat.readConsole();
     }
