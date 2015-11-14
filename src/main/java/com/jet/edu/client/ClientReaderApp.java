@@ -1,4 +1,7 @@
-package com.jet.edu;
+package com.jet.edu.client;
+
+import com.jet.edu.ChatLogger;
+import com.jet.edu.client.ClientApp;
 
 import java.io.*;
 import java.net.Socket;
