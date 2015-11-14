@@ -42,7 +42,7 @@ public class Chat implements State{
      */
     public void readConsole() throws ChatException {
         String message;
-
+        
         while (scanner.hasNext()) {
             message = scanner.nextLine();
             managerState(message);
@@ -69,6 +69,8 @@ public class Chat implements State{
             System.out.println("Некорректное сообщение");
             return;
         }
+
+        ListenerServer();
 
         if (messageWithCommand.startsWith(CHID) && checkName(message)) {
                 jsonObject.put("cmd", CHID);

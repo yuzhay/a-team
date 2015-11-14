@@ -7,12 +7,13 @@ import org.json.JSONObject;
 import java.sql.*;
 
 /**
+ * Simple Chat Storage
  * Created by Yuriy on 12.11.2015.
  */
 public class ChatStorage implements Storage {
     private final String connString;
     private Connection conn = null;
-    private ChatLogger logger = new ChatLogger("ChatServer.log");
+    private final ChatLogger logger = new ChatLogger();
 
     /**
      * Constructor with provided connection string
@@ -45,12 +46,12 @@ public class ChatStorage implements Storage {
         try {
             conn.setAutoCommit(false);
             try (PreparedStatement iq = conn.prepareStatement(selectUserIdQuery);
-                 PreparedStatement iq2 = conn.prepareStatement(insertMessageQuery);
+                 PreparedStatement iq2 = conn.prepareStatement(insertMessageQuery)
             ) {
                 iq.setString(1, name);
                 ResultSet result = iq.executeQuery();
 
-                if (result.next() == false) {
+                if (!result.next()) {
                     return 0;
                 }
 
@@ -89,11 +90,11 @@ public class ChatStorage implements Storage {
     /**
      * Returns all history of the chat
      *
-     * @return
+     * @return json array object
      */
     @Override
     public JSONArray getHistory() {
-        String query = "SELECT USERS.NAME, MESSAGE, TIME FROM APP.MESSAGES INNER JOIN APP.USERS ON USER_ID = USERS.ID";
+        String query = "SELECT USERS.NAME, MESSAGE, TIME FROM APP.MESSAGES INNER JOIN APP.USERS ON USER_ID = USERS.ID FETCH FIRST 100 ROWS ONLY";
         JSONArray jsonArray = new JSONArray();
         try (PreparedStatement iq = conn.prepareStatement(query)) {
             ResultSet result = iq.executeQuery();
@@ -119,7 +120,7 @@ public class ChatStorage implements Storage {
             iq.setString(1, userName);
             ResultSet result = iq.executeQuery();
 
-            if (result.next() == false) {
+            if (!result.next()) {
                 return false;
             }
 

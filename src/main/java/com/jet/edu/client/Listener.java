@@ -1,7 +1,11 @@
 package com.jet.edu.client;
 
+import java.io.BufferedReader;
+import com.jet.edu.ChatLogger;
+
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.Socket;
 
 /**
@@ -12,6 +16,8 @@ public class Listener implements Runnable {
     private Socket socket;
     private String messageUsers = "";
     private InputStream inputStreamReader;
+    private final ChatLogger logger = new ChatLogger();
+
     //endregion
 
     public Listener(Socket socket) {
@@ -23,13 +29,9 @@ public class Listener implements Runnable {
         try {
             while ((inputStreamReader = socket.getInputStream()).available() == 0) {
             }
+            BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-            while (inputStreamReader.available() > 0) {
-                messageUsers += (char) inputStreamReader.read();
-            }
-
-
-
+            String messageUsers = br.readLine();
             System.out.println(messageUsers);
             System.out.flush();
             messageUsers = "";

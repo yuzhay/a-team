@@ -19,7 +19,7 @@ public class ChatServerModel implements ServerModel {
 
     private final Storage storage = new ChatStorage();
     private HashMap<Socket, ClientIO> clients;
-    private ChatLogger logger;
+    private final ChatLogger logger;
 
     public ChatServerModel(HashMap<Socket, ClientIO> clients, ChatLogger logger) {
         this.clients = clients;
@@ -116,13 +116,13 @@ public class ChatServerModel implements ServerModel {
 
     private void sendResponseToAll(JSONObject json, OutputStreamWriter osw) {
         for (ClientIO c : clients.values()) {
-            if (c.getOutputStream().equals(osw)) {
+            /*if (c.getOutputStream().equals(osw)) {
                 continue;
-            }
+            }*/
             try {
-                c.getOutputStream().write(json.toString());
+                c.getOutputStream().write(json.toString() + System.lineSeparator());
                 c.getOutputStream().flush();
-                logger.printConsole("Server To all:");
+                logger.printConsole("Server To all: " + json.toString());
             } catch (IOException e) {
                 logger.printWarning("Not send Messaged to sockets", e);
             }
