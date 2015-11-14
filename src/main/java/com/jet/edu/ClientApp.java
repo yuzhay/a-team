@@ -19,9 +19,14 @@ import java.net.Socket;
 public class ClientApp {
     public static final int ioPort = 52349;
 
-    public static void main(String[] args) throws ChatException, IOException {
+    public static void main(String[] argv) throws ChatException, IOException {
+        int port = ioPort;
+        if (argv.length == 1) {
+            port = Integer.valueOf(argv[0]);
+        }
+
         System.out.println("[Input] Chat client");
-        new Thread(new OutputServer(ioPort)).start();
+        new Thread(new OutputServer(port)).start();
 
         Chat chat = new Chat(new Factory(), new Connector(new Socket("127.0.0.1", 12348)));
 
@@ -65,7 +70,8 @@ class OutputServer implements Runnable {
                 System.out.flush();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Can't start client app server on port" + port);
+            System.exit(1);
         }
     }
 }

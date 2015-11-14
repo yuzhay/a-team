@@ -9,8 +9,12 @@ import java.net.Socket;
  */
 public class ClientReaderApp {
     public static void main(String[] argv) throws FileNotFoundException {
+        int port = ClientApp.ioPort;
+        if (argv.length == 1) {
+            port = Integer.valueOf(argv[0]);
+        }
         try (
-                Socket client = new Socket("localhost", ClientApp.ioPort);
+                Socket client = new Socket("localhost", port);
                 InputStreamReader isr = new InputStreamReader(client.getInputStream());
                 BufferedReader br = new BufferedReader(isr)
         ) {
@@ -21,8 +25,8 @@ public class ClientReaderApp {
                 System.out.flush();
             }
         } catch (IOException e) {
-            int p = 87;
-            e.printStackTrace();
+            System.out.println("Can't connect to client app on port" + port);
+            System.exit(1);
         }
     }
 

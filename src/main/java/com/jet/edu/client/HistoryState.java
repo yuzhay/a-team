@@ -19,8 +19,8 @@ public class HistoryState implements State {
     /**
      * initialize connection and jsonObject
      *
-     * @param jsonObject
-     * @param connector
+     * @param jsonObject object to parse
+     * @param connector used to send information
      */
     public HistoryState(JSONObject jsonObject, Connector connector) {
         this.jsonObject = jsonObject;
@@ -38,9 +38,9 @@ public class HistoryState implements State {
             return;
         JSONObject responceJson = new JSONObject(resp);
         JSONArray history = responceJson.getJSONArray("history");
-        Iterator<Object> jsonObjectIterator = history.iterator();
-        while (jsonObjectIterator.hasNext()) {
-            JSONObject jsonObject = (JSONObject) jsonObjectIterator.next();
+
+        for (Object aHistory : history) {
+            JSONObject jsonObject = (JSONObject) aHistory;
 
             println(
                     String.format("%s[%s]:\t%s",
@@ -49,7 +49,6 @@ public class HistoryState implements State {
                             jsonObject.getString("MESSAGE")
 
                     ));
-
         }
 
     }
