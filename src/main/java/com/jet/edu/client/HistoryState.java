@@ -3,6 +3,7 @@ package com.jet.edu.client;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.security.Timestamp;
 import java.util.Iterator;
 
 /**
@@ -40,9 +41,9 @@ public class HistoryState implements State {
         }
         JSONObject responceJson = new JSONObject(resp);
         JSONArray history = responceJson.getJSONArray("history");
-        Iterator<Object> jsonObjectIterator = history.iterator();
-        while (jsonObjectIterator.hasNext()) {
-            JSONObject jsonObject = (JSONObject) jsonObjectIterator.next();
+
+        for (Object aHistory : history) {
+            JSONObject jsonObject = (JSONObject) aHistory;
             println(
                     String.format("%s[%s]:\t%s",
                             jsonObject.getString("NICKNAME"),

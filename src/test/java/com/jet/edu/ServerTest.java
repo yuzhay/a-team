@@ -12,7 +12,6 @@ public class ServerTest {
     private ChatServer chatServer;
     @Before
     public void setUpTest(){
-        chatServer = new ChatServer(12345);
     }
 
 }

@@ -10,14 +10,21 @@ import java.util.logging.Logger;
  */
 public class ChatLogger {
     private final static Logger logger = Logger.getLogger("System");
-    private final static String filepath = "ChatServer.log";
+
+    /**
+     * Default ChatLogger constructor
+     */
+    public ChatLogger() {
+        this("ChatLogger.log");
+    }
 
     /**
      * Constructor
+     *
      * @throws IOException - exception if something wrong whith file
      */
-    public ChatLogger(){
-        try{
+    public ChatLogger(String filepath) {
+        try {
             FileHandler handler = new FileHandler(filepath);
             logger.setUseParentHandlers(false);
             logger.addHandler(handler);
@@ -29,6 +36,7 @@ public class ChatLogger {
 
     /**
      * print INFO message
+     *
      * @param message - message
      */
     public void printInfo(String message, Throwable e){
@@ -38,14 +46,17 @@ public class ChatLogger {
 
     /**
      * prints WARNING message
+     *
      * @param message - message
      */
     public void printWarning(String message,  Throwable e){
         if (logger.isLoggable(Level.WARNING))
             logger.log(Level.WARNING,message+ System.lineSeparator()+ e);
     }
+
     /**
      * prints WARNING message
+     *
      * @param message - message
      */
     public void printWarning(String message){
@@ -55,6 +66,7 @@ public class ChatLogger {
 
     /**
      * prints SERVE message
+     *
      * @param message - message
      */
     public void printSevere(String message, Throwable e){
@@ -62,7 +74,7 @@ public class ChatLogger {
             logger.log(Level.SEVERE,message + System.lineSeparator()+ e);
     }
 
-    public void printConsole(String message){
+    public void printConsole(String message) {
         System.out.print(message);
     }
 

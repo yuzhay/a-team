@@ -70,6 +70,8 @@ public class Chat implements State{
             return;
         }
 
+        ListenerServer();
+
         if (messageWithCommand.startsWith(CHID) && checkName(message)) {
                 jsonObject.put("cmd", CHID);
                 jsonObject.put("msg", message);
