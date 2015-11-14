@@ -62,6 +62,7 @@ public class ChatServerModel implements ServerModel {
             case COMMAND_SND:
                 if (!json.has("name")) {
                     response.put("status", "error");
+                    response.put("cmd", "/snd");
                     response.put("msg", "Can't find 'name' in json");
                     sendResponse(response, osw);
                     logger.printWarning(response.toString());
@@ -73,10 +74,10 @@ public class ChatServerModel implements ServerModel {
                     response.put("msg", msg);
                     response.put("name", name);
                     response.put("time", timestamp);
+                    response.put("cmd", "/snd");
 
                     JSONObject ownerResponse = new JSONObject();
                     ownerResponse.put("status", "ok");
-                    sendResponse(ownerResponse, osw);
                     sendResponseToAll(response, osw);
                 } else {
                     response.put("status", "error");
@@ -88,15 +89,17 @@ public class ChatServerModel implements ServerModel {
             case COMMAND_CHID:
                 if (storage.isUserOnline(msg)) {
                     response.put("status", "error");
+                    response.put("cmd", "/chid");
                     response.put("msg", "This users is already registered");
                     sendResponse(response, osw);
                     return;
                 }
                 storage.addUser(msg);
-                response.put("msg", "User registered");
+                response.put("name", msg);
                 sendResponse(response, osw);
                 return;
             case COMMAND_HIST:
+                response.put("cmd", "/hist");
                 response.put("history", storage.getHistory());
                 sendResponse(response, osw);
         }
@@ -116,9 +119,6 @@ public class ChatServerModel implements ServerModel {
 
     private void sendResponseToAll(JSONObject json, OutputStreamWriter osw) {
         for (ClientIO c : clients.values()) {
-            /*if (c.getOutputStream().equals(osw)) {
-                continue;
-            }*/
             try {
                 c.getOutputStream().write(json.toString() + System.lineSeparator());
                 c.getOutputStream().flush();

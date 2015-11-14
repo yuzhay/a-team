@@ -69,7 +69,7 @@ public class ChatClientTest {
         scannerField.set(chatClient,scanner);
 
         Mockito.when(mockFactory.getRegisterState()).thenReturn(mockRegisterState);
-        Mockito.when(mockRegisterState.writerToConnector()).thenReturn(true);
+        //Mockito.when(mockRegisterState.writerToConnector()).thenReturn(true);
 
         chatClient.readConsole();
 

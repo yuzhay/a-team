@@ -48,12 +48,10 @@ public class Connector {
      * @return readed string messages
      * @throws ChatException
      */
-    public String sendMessage(JSONObject jsonMessage) throws ChatException {
+    public void sendMessage(JSONObject jsonMessage) throws ChatException {
         try {
             bw.write(jsonMessage.toString() + System.lineSeparator());
             bw.flush();
-            while (!br.ready()) {}
-            return br.readLine();
         } catch (IOException e) {
             throw new ChatException("Соединение с сервером разорвано", e);
         }

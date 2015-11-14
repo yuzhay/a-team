@@ -29,14 +29,6 @@ public class SendState implements State {
      * @throws ChatException
      */
     public void writeToConnector() throws ChatException {
-        String responce = connector.sendMessage(this.jsonObject);
-        JSONObject jsonObject = new JSONObject(responce);
-        println(
-                String.format("%s[%s]:\t%s",
-                        jsonObject.getString("name"),
-                        jsonObject.getString("msg"),
-                        jsonObject.getString("time")
-
-                ));
+        connector.sendMessage(jsonObject);
     }
 }

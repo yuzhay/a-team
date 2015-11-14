@@ -16,14 +16,7 @@ public class RoomState implements State {
     }
 
     public void writerToConnector() throws ChatException {
-        String fromConnector = connector.sendMessage(jsonObject);
-        if (fromConnector != null) {
-            JSONObject messageFromServer = new JSONObject(fromConnector);
-            String message = messageFromServer.get("msg").toString();
-            System.out.println(message);
-        } else {
-            System.out.println("Нет соединения");
-        }
+        connector.sendMessage(jsonObject);
     }
 
 }
