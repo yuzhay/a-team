@@ -132,7 +132,10 @@ public class ChatServerModel implements ServerModel {
     }
 
     protected void finalize() throws Throwable {
-        storage.disconnect();
-        super.finalize();
+        try {
+            storage.disconnect();
+        } finally {
+            super.finalize();
+        }
     }
 }
