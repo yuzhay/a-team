@@ -14,6 +14,12 @@ public class ChatLogger {
     private FileHandler handler;
 
     /**
+     * Default ChatLogger constructor
+     */
+    public ChatLogger(){
+        this("ChatLogger.log");
+    }
+    /**
      * Constructor
      * @param filepath - path to file
      * @throws IOException - exception if something wrong whith file
