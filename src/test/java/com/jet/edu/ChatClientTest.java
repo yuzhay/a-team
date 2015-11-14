@@ -56,6 +56,7 @@ public class ChatClientTest {
     }
 
     @Test
+    @Ignore
     public void shouldRegisterNames() throws Exception{
         ByteArrayInputStream IN = new ByteArrayInputStream("/chid testUser".getBytes());
         System.setIn(IN);
@@ -75,4 +76,9 @@ public class ChatClientTest {
         Assert.assertEquals(nameField.get(chatClient), "testUser");
         IN.reset();
     }
+
+//    @Test
+//    public void shouldRecieveHistory() throws Exception{
+//        ByteArrayInputStream
+//    }
 }
