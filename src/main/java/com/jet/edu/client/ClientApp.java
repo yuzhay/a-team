@@ -1,9 +1,7 @@
-package com.jet.edu;
+package com.jet.edu.client;
 
 
-import com.jet.edu.client.Chat;
-import com.jet.edu.client.ChatException;
-import com.jet.edu.client.Factory;
+import com.jet.edu.ChatLogger;
 import org.apache.commons.io.output.WriterOutputStream;
 
 import java.io.IOException;

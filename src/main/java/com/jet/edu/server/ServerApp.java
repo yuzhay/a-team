@@ -1,5 +1,6 @@
-package com.jet.edu;
+package com.jet.edu.server;
 
+import com.jet.edu.ChatLogger;
 import com.jet.edu.server.ChatServer;
 
 import java.io.IOException;
