@@ -58,7 +58,7 @@ public class ChatLogger {
      * @param message - message
      */
     public void printSevere(String message, Throwable e){
-        if (logger.isLoggable(Level.INFO))
+        if (logger.isLoggable(Level.SEVERE))
             logger.log(Level.SEVERE,message + System.lineSeparator()+ e);
     }
 
