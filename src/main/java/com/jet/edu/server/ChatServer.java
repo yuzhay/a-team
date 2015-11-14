@@ -15,7 +15,7 @@ import java.nio.charset.Charset;
 public class ChatServer {
     //region private fields
     private final Charset charset = Charset.forName("utf-8");
-    private final ChatLogger logger = new ChatLogger("ChatServer.log");
+    private final ChatLogger logger = new ChatLogger();
     private ServerSocket socket;
     private Thread serverThread;
     private Acceptor acceptor;

@@ -1,6 +1,8 @@
 package com.jet.edu.client;
 
 import java.io.BufferedReader;
+import com.jet.edu.ChatLogger;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -14,6 +16,8 @@ public class Listener implements Runnable {
     private Socket socket;
     private String messageUsers = "";
     private InputStream inputStreamReader;
+    private final ChatLogger logger = new ChatLogger();
+
     //endregion
 
     public Listener(Socket socket) {

@@ -10,7 +10,7 @@ import java.util.logging.Logger;
  */
 public class ChatLogger {
     private final static Logger logger = Logger.getLogger("System");
-    private FileHandler handler;
+    private final static String filepath = "ChatServer.log";
 
     /**
      * Default ChatLogger constructor
@@ -20,16 +20,14 @@ public class ChatLogger {
     }
     /**
      * Constructor
-     * @param filepath - path to file
      * @throws IOException - exception if something wrong whith file
      */
-    public ChatLogger(String filepath){
+    public ChatLogger(){
         try{
-            this.handler = new FileHandler(filepath);
+            FileHandler handler = new FileHandler(filepath);
             logger.setUseParentHandlers(false);
             logger.addHandler(handler);
         } catch (IOException e){
-            this.handler = null;
             this.logger.log(Level.WARNING,"ERROR WITH FILE! LOGS WILL BE WRITE INTO CONSOLE", e);
         }
     }
