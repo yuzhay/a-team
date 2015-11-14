@@ -9,7 +9,6 @@ import org.json.JSONObject;
  * command /chid <name> - register name
  */
 public class RegisterState implements State {
-    public static final String OK = "ok";
     private final JSONObject jsonObject;
     private final Connector connector;
 
@@ -42,7 +41,7 @@ public class RegisterState implements State {
     private boolean checkMessageFromServer(String msgFromServer) {
         JSONObject messageFromServer = new JSONObject(msgFromServer);
         String message = messageFromServer.get("status").toString();
-        if (message.equals(OK)) {
+        if (message.equals("ok")) {
             return true;
         } else {
             return false;

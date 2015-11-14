@@ -9,24 +9,30 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.sql.SQLException;
-import java.util.Hashtable;
+import java.util.HashMap;
 
 /**
+ * Chat Server Model
  * Created by Yuriy on 12.11.2015.
  */
-public class ChatServerState implements ServerState {
+public class ChatServerModel implements ServerModel {
 
     private final Storage storage = new ChatStorage();
-    private Hashtable<Socket, ClientIO> clients;
+    private HashMap<Socket, ClientIO> clients;
     private ChatLogger logger;
 
-    public ChatServerState(Hashtable<Socket, ClientIO> clients, ChatLogger logger) {
+    public ChatServerModel(HashMap<Socket, ClientIO> clients, ChatLogger logger) {
         this.clients = clients;
         this.logger = logger;
+
+        try {
+            storage.connect();
+        } catch (SQLException e) {
+            logger.printSevere("Can't connect to Database", e);
+        }
     }
 
-    @Override
-    public void switchState(String str, ClientIO client) {
+    public void execute(String str, ClientIO client) {
         JSONObject response = new JSONObject();
         JSONObject json;
 
@@ -52,12 +58,6 @@ public class ChatServerState implements ServerState {
         }
 
         response.put("status", "ok");
-
-        try {
-            storage.connect();
-        } catch (SQLException e) {
-            logger.printSevere(response.toString(), e);
-        }
 
         switch (cmd) {
             case COMMAND_SND:
@@ -101,7 +101,6 @@ public class ChatServerState implements ServerState {
             case COMMAND_HIST:
                 response.put("history", storage.getHistory());
                 sendResponse(response, osw);
-                return;
         }
     }
 
@@ -110,7 +109,7 @@ public class ChatServerState implements ServerState {
         try {
             osw.write(json.toString() + System.lineSeparator());
             osw.flush();
-            System.out.println("Server answered: '" + json.toString() + "'");
+            logger.printConsole("Server to one: '" + json.toString() + "'");
         } catch (IOException e) {
             logger.printWarning("Connection lost", e);
             logger.printConsole("Connection closed by peer");
@@ -124,9 +123,17 @@ public class ChatServerState implements ServerState {
             }
             try {
                 c.getOutputStream().write(json.toString());
+                c.getOutputStream().flush();
+                logger.printConsole("Server To all:");
             } catch (IOException e) {
                 logger.printWarning("Not send Messaged to sockets", e);
             }
         }
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        storage.disconnect();
+        super.finalize();
     }
 }
