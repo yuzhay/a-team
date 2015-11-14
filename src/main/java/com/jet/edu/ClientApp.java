@@ -7,6 +7,8 @@ import com.jet.edu.client.Connector;
 import com.jet.edu.client.Factory;
 import org.apache.commons.io.output.WriterOutputStream;
 
+import java.io.IOException;
+import java.net.Socket;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -28,7 +30,7 @@ public class ClientApp {
 
     private ClientApp() {
     }
-
+    
     private static class OutputServer implements Runnable {
         @Override
         public void run() {
