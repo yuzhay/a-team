@@ -10,7 +10,7 @@ import java.net.Socket;
 public class ClientReaderApp {
     private static final ChatLogger logger = new ChatLogger();
 
-    public static void main(String[] argv) throws FileNotFoundException {
+    public static void main(String[] argv) {
         try (
                 Socket client = new Socket("localhost", ClientApp.ioPort);
                 InputStreamReader isr = new InputStreamReader(client.getInputStream());

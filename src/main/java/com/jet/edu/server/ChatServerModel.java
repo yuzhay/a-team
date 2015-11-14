@@ -19,7 +19,7 @@ public class ChatServerModel implements ServerModel {
 
     private final Storage storage = new ChatStorage();
     private HashMap<Socket, ClientIO> clients;
-    private ChatLogger logger;
+    private final ChatLogger logger;
 
     public ChatServerModel(HashMap<Socket, ClientIO> clients, ChatLogger logger) {
         this.clients = clients;

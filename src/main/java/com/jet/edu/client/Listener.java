@@ -1,5 +1,7 @@
 package com.jet.edu.client;
 
+import com.jet.edu.ChatLogger;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
@@ -12,6 +14,8 @@ public class Listener implements Runnable {
     private Socket socket;
     private String messageUsers = "";
     private InputStream inputStreamReader;
+    private final ChatLogger logger = new ChatLogger();
+
     //endregion
 
     public Listener(Socket socket) {
@@ -31,7 +35,7 @@ public class Listener implements Runnable {
             System.out.flush();
             messageUsers = "";
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.printSevere("IO Listener", e);
         }
     }
 }
