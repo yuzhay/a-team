@@ -15,6 +15,7 @@ public interface Storage {
     boolean isUserOnline(String userName);
     void setUserOffline(String userName);
     void addUser(String userName);
+    void removeUser(String userName);
     void disconnect();
     void connect() throws SQLException;
     void changeRoom(String roomName, String userName);

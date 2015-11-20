@@ -12,7 +12,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,9 +28,10 @@ class Acceptor implements Runnable {
     private final Charset charset;
     //region private fields
     private final HashMap<Socket, ClientIO> clientsMap = new HashMap<>();
+    private final List<ClientIO> clientsArray = new ArrayList<>(200);
     //endregion
 
-    public Acceptor(ServerSocket serverSocket, ChatLogger logger, Charset charset){
+    public Acceptor(ServerSocket serverSocket, ChatLogger logger, Charset charset) {
         this.logger = logger;
         this.serverSocket = serverSocket;
         this.charset = charset;
@@ -59,53 +62,57 @@ class Acceptor implements Runnable {
     private void addClient(Socket sock) {
         synchronized (clientsMap) {
             try {
-                clientsMap.put(sock,
-                        new ClientIO(
-                                new BufferedReader(
-                                        new InputStreamReader(sock.getInputStream(), charset)
-                                ),
-                                new OutputStreamWriter(sock.getOutputStream(), charset),
-                                new BufferedInputStream(sock.getInputStream()))
-                );
+                clientsArray.add(new ClientIO(
+                        new BufferedReader(
+                                new InputStreamReader(sock.getInputStream(), charset)
+                        ),
+                        new OutputStreamWriter(sock.getOutputStream(), charset),
+                        new BufferedInputStream(sock.getInputStream()), ""));
             } catch (IOException e) {
                 logger.printSevere("Server can't start on localhost:", e);
             }
         }
     }
 
-    private void removeClient(Socket sock) {
-        synchronized (clientsMap) {
-            clientsMap.remove(sock);
+    private void removeClient(int index) {
+        synchronized (clientsArray) {
+            clientsArray.remove(index);
         }
-        logger.printConsole("Client disconnected: " + sock);
+
     }
 
     private class OneThreadWorker implements Runnable {
+
+        private ChatStorage storage = new ChatStorage();
+
         @Override
         public void run() {
-            ChatServerModel css = new ChatServerModel(clientsMap, logger);
-            //noinspection InfiniteLoopStatement
+            ChatServerModel css = new ChatServerModel(clientsArray, logger);
+
             while (true) {
-                synchronized (clientsMap) {
-                    for (Map.Entry<Socket, ClientIO> elem : clientsMap.entrySet()) {
+                synchronized (clientsArray) {
+                    for (int i = 0; i < clientsArray.size(); i++) {
+                        ClientIO c = clientsArray.get(i);
                         try {
-                            BufferedReader br = elem.getValue().getInputStream();
-                            BufferedInputStream bis = elem.getValue().getBufferedInputStream();
+                            BufferedReader br = c.getInputStream();
+                            BufferedInputStream bis = c.getBufferedInputStream();
 
                             if (bis.available() == 0) {
                                 continue;
                             }
 
                             String line = br.readLine();
-                            System.out.println(elem.getKey().toString() + ": " + line);
+                            logger.printConsole(c.toString() + ": " + line);
 
-                            css.execute(line, clientsMap.get(elem.getKey()));
+                            css.execute(line, i);
                         } catch (IOException e) {
                             logger.printWarning("IO client", e);
-                            removeClient(elem.getKey());
+                            removeClient(i);
+                            storage.removeUser(c.getUserName());
                         }
                     }
                 }
+
             }
         }
     }

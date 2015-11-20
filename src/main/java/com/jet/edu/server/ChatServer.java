@@ -59,6 +59,7 @@ class ClientIO {
     private BufferedReader br;
     private OutputStreamWriter sw;
     private BufferedInputStream bis;
+    private String userName;
     //region public methods
 
     /**
@@ -67,10 +68,11 @@ class ClientIO {
      * @param br socket input stream
      * @param sw socket output stream
      */
-    public ClientIO(BufferedReader br, OutputStreamWriter sw, BufferedInputStream bis) {
+    public ClientIO(BufferedReader br, OutputStreamWriter sw, BufferedInputStream bis, String name) {
         this.br = br;
         this.sw = sw;
         this.bis = bis;
+        this.userName = name;
     }
 
     /**
@@ -100,5 +102,13 @@ class ClientIO {
         return this.sw;
     }
 
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String name) {
+        this.userName = name;
+    }
     //endregion
 }

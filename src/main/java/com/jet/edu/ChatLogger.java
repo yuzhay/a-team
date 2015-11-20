@@ -75,7 +75,7 @@ public class ChatLogger {
     }
 
     public void printConsole(String message) {
-        System.out.print(message);
+        //System.out.print(message);
     }
 
 }

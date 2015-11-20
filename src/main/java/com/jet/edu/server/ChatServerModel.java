@@ -9,7 +9,9 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Chat Server Model
@@ -18,10 +20,10 @@ import java.util.HashMap;
 public class ChatServerModel implements ServerModel {
 
     private final Storage storage = new ChatStorage();
-    private HashMap<Socket, ClientIO> clients;
+    private List<ClientIO> clients;
     private final ChatLogger logger;
 
-    public ChatServerModel(HashMap<Socket, ClientIO> clients, ChatLogger logger) {
+    public ChatServerModel(List<ClientIO> clients, ChatLogger logger) {
         this.clients = clients;
         this.logger = logger;
 
@@ -32,12 +34,12 @@ public class ChatServerModel implements ServerModel {
         }
     }
 
-    public void execute(String str, ClientIO client) {
+    public void execute(String str, int sockIndex) {
         JSONObject response = new JSONObject();
         JSONObject json;
 
-        OutputStreamWriter osw = client.getOutputStream();
-        BufferedReader br = client.getInputStream();
+        OutputStreamWriter osw = clients.get(sockIndex).getOutputStream();
+        BufferedReader br = clients.get(sockIndex).getInputStream();
         String cmd;
         String msg = "";
 
@@ -78,7 +80,9 @@ public class ChatServerModel implements ServerModel {
 
                     JSONObject ownerResponse = new JSONObject();
                     ownerResponse.put("status", "ok");
-                    sendResponseToAll(response, osw);
+
+                    //sendResponseToAll(response, osw);
+                    sendResponseToAll(ownerResponse, osw);
                 } else {
                     response.put("status", "error");
                     response.put("msg", "Can't add message");
@@ -118,10 +122,10 @@ public class ChatServerModel implements ServerModel {
     }
 
     private void sendResponseToAll(JSONObject json, OutputStreamWriter osw) {
-        for (ClientIO c : clients.values()) {
+        for (int i = 0; i < clients.size(); i++) {
             try {
-                c.getOutputStream().write(json.toString() + System.lineSeparator());
-                c.getOutputStream().flush();
+                clients.get(i).getOutputStream().write(json.toString() + System.lineSeparator());
+                clients.get(i).getOutputStream().flush();
                 logger.printConsole("Server To all: " + json.toString());
             } catch (IOException e) {
                 logger.printWarning("Not send Messaged to sockets", e);

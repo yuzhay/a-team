@@ -10,5 +10,5 @@ public interface ServerModel {
     String COMMAND_CHID = "/chid";
     String COMMAND_ROOM = "/room";
 
-    void execute(String str, ClientIO client);
+    void execute(String str, int index);
 }

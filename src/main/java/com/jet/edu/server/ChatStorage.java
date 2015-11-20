@@ -40,7 +40,7 @@ public class ChatStorage implements Storage {
      */
     @Override
     public long addMessage(String name, String msg) {
-        String selectUserIdQuery = "SELECT id FROM USERS WHERE name=?";
+        String selectUserIdQuery = "SELECT ID FROM APP.USERS WHERE NAME=?";
         String insertMessageQuery = "INSERT INTO APP.MESSAGES (USER_ID,MESSAGE) VALUES(?, ?)";
 
         try {
@@ -154,6 +154,23 @@ public class ChatStorage implements Storage {
         String insertUserQuery = "INSERT INTO APP.USERS (NAME, ONLINE) VALUES(?, 1)";
         try (
                 PreparedStatement iq = conn.prepareStatement(insertUserQuery)) {
+            iq.setString(1, userName);
+            iq.executeUpdate();
+        } catch (SQLException e) {
+            logger.printSevere("SQL exception", e);
+        }
+    }
+
+    /**
+     * Remove user
+     *
+     * @param userName user name
+     */
+    @Override
+    public void removeUser(String userName) {
+        String deleteUserQuery = "DELETE FROM APP.USERS WHERE NAME=?";
+        try (
+                PreparedStatement iq = conn.prepareStatement(deleteUserQuery)) {
             iq.setString(1, userName);
             iq.executeUpdate();
         } catch (SQLException e) {
